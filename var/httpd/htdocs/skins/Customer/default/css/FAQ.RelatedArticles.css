@@ -1,0 +1,81 @@
+/*
+Copyright (C) 2001-2019 Rother OSS GmbH, https://otobo.de/
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see
+the enclosed file COPYING for license information (GPL). If you
+did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
+*/
+
+@media screen,projection,tv,handheld {
+
+/* overwrite standard */
+div#cke_RichText {
+    width: calc( 66% - 276px ) !important;
+}
+
+.RichTextHolder > label[for='RichText'] {
+    left: calc( -66% + 300px );
+    width: 48px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#FAQRelatedArticles.Hidden {
+    display: none !important;
+}
+
+#FAQRelatedArticles {
+    position: relative;
+    left: -30px;
+
+    display: inline-block;
+    vertical-align: top;
+
+    width: 238px;
+    padding: 0;
+}
+
+#FAQRelatedArticles:before {
+    position: relative;
+    top: 5px;
+
+    display: inline-block;
+    vertical-align: top;
+    font-size: 14px;
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'otobo' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e911";
+}
+
+#FAQRelatedArticles > .WidgetSimple {
+    display: inline-block;
+    vertical-align: top;
+    width: 220px;
+    white-space: normal;
+}
+
+#FAQRelatedArticles .Header {
+    margin-bottom: 8px;
+}
+
+#FAQRelatedArticles li {
+    padding-top: 16px;
+    margin-bottom: 16px;
+    border-top: 1.2px solid #e5e5eb;
+}
+
+#FAQRelatedArticles li:first-child {
+    border-top: none;
+}
+
+} /* end @media */

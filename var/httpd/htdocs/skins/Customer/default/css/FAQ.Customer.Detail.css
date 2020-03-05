@@ -1,0 +1,303 @@
+/*
+Copyright (C) 2001-2019 Rother OSS GmbH, https://otobo.de/
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see
+the enclosed file COPYING for license information (GPL). If you
+did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
+*/
+
+/**
+ * @package     Skin "Default"
+ * @section     Default Settings
+ */
+
+@media screen,projection,tv,handheld {
+
+    #oooHeader {
+        position: sticky;
+        top: 0;
+        height: 145px;
+        background-color: #ffffff;
+        border-bottom: 1.2px solid #e5e5eb;
+
+        display: grid;
+        /* text + breadcrumb / search */
+        grid-template-columns: 1fr auto;
+        grid-template-rows: 100%;
+        align-items: center;
+    }
+
+    #oooHeader i {
+        display: inline-block;
+        vertical-align: middle;
+        padding-bottom: 3px;
+    }
+
+    .BreadCrumb a,
+    .BreadCrumb h3 {
+        display: inline-block;
+    }
+
+    .BreadCrumb > a:after {
+        /* use !important to prevent issues with browser extensions that change fonts */
+        font-family: 'otobo' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        content: "\e904";
+        color: #7f809d;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    .WidgetSimple {
+        margin-top: 48px;
+        max-width: 1050px;
+    }
+
+    .Header {
+        max-width: 1016px;
+    }
+
+/* SubCategories */
+    .oooSubBox {
+        position: relative;
+        top: -5px;
+        left: -5px;
+        padding: 5px 5px 5px 5px;
+        margin-top: 8px;
+
+        max-width: calc( 100% + 10px );
+        height: calc( 100% + 10px );
+        max-height: 260px;
+        overflow-y: scroll;
+    }
+
+    .oooSub {
+        display: inline-block;
+        height: 66px;
+        width: 256px;
+        border-radius: 15px;
+        box-shadow: 0 1px 4px 0 rgba(4, 0, 71, 0.16);
+        background-color: #ffffff;
+        padding: 24px 36px 24px 36px;
+        margin-right: 16px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .oooSub > h3 {
+        display: inline-block;
+        overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .oooSubCount {
+        float: right;
+        text-align: right;
+        padding-top: 2px;
+    }
+
+    .oooComment {
+        height: 42px;
+        overflow: hidden;
+    }
+
+    .oooSub > h3,
+    .oooSub > p {
+        overflow: hidden;
+    }
+
+/* article list */
+    .Header > h2 {
+        display: inline-block;
+    }
+    .Pagination {
+        float: right;
+        padding-top: 20px;
+        padding-right: 36px;
+    }
+
+    .oooFAQ {
+        display: block;
+        height: 24px;
+        width: calc( 100% - 72px );
+        max-width: 944px;
+        border-radius: 15px;
+        box-shadow: 0 1px 4px 0 rgba(4, 0, 71, 0.16);
+        background-color: #ffffff;
+        padding: 16px 36px 16px 36px;
+        margin-top: 16px;
+    }
+
+    .oooFAQ h3 {
+        display: inline-block;
+    }
+
+    .oooFAQ p {
+        float: right;
+        padding-top: 2px;
+    }
+
+/* article zoom */
+
+    #Messages > li,
+    #ZoomSidebar {
+        display: block;
+        width: calc( 100% - 72px );
+        max-width: 944px;
+        border-radius: 15px;
+        box-shadow: 0 1px 4px 0 rgba(4, 0, 71, 0.16);
+        background-color: #ffffff;
+        padding: 24px 36px 24px 36px;
+        margin-top: 24px;
+    }
+
+    .Attachments,
+    #Metadata {
+        margin-left: 8px;
+    }
+
+/* Rating */
+    .RateButton {
+        position: relative;
+        text-align: center;
+        display: block;
+        height: 30px;
+        width: 25px;
+        cursor: pointer;
+        float: left;
+        color: #000000;
+        text-align: center;
+    }
+    
+    .RTL .RateButton {
+        float: right;
+    }
+    
+    .RateButton i {
+        display: block;
+        font-size: 16px;
+        width: 100%;
+        text-align: center;
+        color: #7f809d;
+    }
+    
+    .RateButton i.fa-star {
+        display: none;
+    }
+    
+    .RateButton.RateChecked i.fa-star {
+        display: block;
+        color: #001bff;
+    }
+    
+    .RateButton.RateChecked i.fa-star-o {
+        display: none;
+    }
+    
+    .RateButton:hover i.fa-star-o {
+        color: #00023c;
+    }
+    
+    .RateStar {
+        display: block;
+        height: 16px;
+        cursor: pointer;
+        float: left;
+        padding-left: 1px;
+        font-size: 10px;
+    }
+    
+    .RTL .RateStar {
+        float: right;
+    }
+    
+    .RateStarText {
+        margin-left: 6px;
+    }
+    
+    .RTL .RateStarText {
+        margin-left: 0px;
+        margin-right: 6px;
+    }
+    
+    .RateLabelBefore {
+        float: left;
+        padding-right: 15px;
+        margin-left: 10px;
+    }
+    
+    .RTL .RateLabelBefore {
+        float: right;
+    }
+    
+    .RateLabelAfter {
+        float: left;
+        margin-left: 5px;
+        margin-right: 25px;
+    }
+    
+    .RTL .RateLabelAfter {
+        float: left;
+        margin-right: 5px;
+        margin-left: 65px;
+    }
+    
+    .RatingLabel {
+        float: left;
+        padding-right: 2px;
+    }
+    
+    .RTL .RatingLabel {
+        float: right;
+        padding-left: 2px;
+    }
+
+    .VotingBox {
+        margin-top: 24px;
+    }
+    
+/*    .SpacingTop {
+        margin-top: 13px;
+    }
+    
+    .SpacingTopLarge {
+        margin-top: 26px;
+    }
+    
+    .RTL .VotingContainer {
+        text-align: center;
+    }
+    
+    .VotingQuestion {
+        margin-left: 10px;
+        margin-right:10px;
+        color: #000000;
+    }
+    
+    .VotingBox {
+        min-width: 20pc;
+        margin: 0 30px 21px;
+        color: #6A6A6A;
+        background: #F9F9F9;
+        border-left: 1px solid #D6D6D6;
+        border-right: 1px solid #D6D6D6;
+        display: inline-block;
+        position: relative;
+        border-bottom: 1px solid #D6D6D6;
+    }
+    
+    .VotingBox > #Messenger {
+        height: auto;
+        border-top: 1px solid #EEE;
+    }
+*/    
+}
