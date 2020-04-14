@@ -2141,6 +2141,11 @@ Your OTOBO Notification Master
                         <Item>FAQ.Customer.Default.css</Item>
                     </Array>
                 </Item>
+                <Item Key="JavaScript">
+                    <Array>
+                        <Item>FAQ.Customer.RelatedArticles.js</Item>
+                    </Array>
+                </Item>
             </Hash>
         </Value>
     </Setting>

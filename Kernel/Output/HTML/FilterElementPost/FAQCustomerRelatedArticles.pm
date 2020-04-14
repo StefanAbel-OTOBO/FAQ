@@ -191,6 +191,11 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
                 if ( \$('#FAQRelatedArticles').length ) {
 
                     \$('#FAQRelatedArticles').html(Response.CustomerRelatedFAQArticlesHTMLString);
+                    \$('#FAQRelatedArticles:not(.Hidden)').show();
+                }
+
+                if ( \$('#FAQRelatedArticles .Content > .FAQMiniList').length == 0 ) {
+                    \$('#FAQRelatedArticles').hide();
                 }
             }));
         }

@@ -476,6 +476,7 @@
         <File Location="var/httpd/htdocs/js/FAQ.Agent.RelatedArticles.js" Permission="644" />
         <File Location="var/httpd/htdocs/js/FAQ.Agent.TicketCompose.js" Permission="644" />
         <File Location="var/httpd/htdocs/js/FAQ.Customer.FAQZoom.js" Permission="644" />
+        <File Location="var/httpd/htdocs/js/FAQ.Customer.RelatedArticles.js" Permission="644" />
         <File Location="var/httpd/htdocs/skins/Agent/default/css/FAQ.Agent.Default.css" Permission="644" />
         <File Location="var/httpd/htdocs/skins/Agent/default/css/FAQ.Agent.Detail.css" Permission="644" />
         <File Location="var/httpd/htdocs/skins/Agent/default/img/help-small.png" Permission="644" />
