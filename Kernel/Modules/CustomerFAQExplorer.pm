@@ -239,8 +239,15 @@ sub Run {
     );
 
     # include Category if it's set to not 0, or if it's no search even then
-    if ( $CategoryID || !%Search ) {
+    if ( $CategoryID ) {
         $FAQSearch{CategoryIDs} = [$CategoryID],
+    }
+
+    # get the latest articles for the root category (else empty)
+    elsif ( !%Search ) {
+        $SortBy = 'Changed';
+        $OrderBy = 'Down';
+        $SearchLimit = 10;
     }
 
     # search all FAQ articles within the given category

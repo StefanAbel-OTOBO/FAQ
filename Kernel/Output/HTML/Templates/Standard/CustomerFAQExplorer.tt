@@ -73,7 +73,11 @@
         <div class="WidgetSimple">
 
             <div class="Header">
+[% IF Data.CategoryID == 0 %]
+                <h2>[% Translate("Latest updated FAQ articles") | html %]</h2>
+[% ELSE %]
                 <h2>[% Translate("FAQ Articles") | html %]</h2>
+[% END %]
 [% RenderBlockStart("Pagination") %]
                 <div class="Pagination ooo10g">
                     <strong>[% Data.Result | html %]</strong> [% Translate("of") | html %] <strong>[% Data.TotalHits | html %]</strong> - [% Translate("Page") | html %]: [% Data.SiteNavBar %]
