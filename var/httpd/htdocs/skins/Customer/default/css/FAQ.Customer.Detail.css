@@ -43,6 +43,7 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 
     #oooMainBox {
         background-color: #f7f7f9;
+        background-color: var(--colBGLight);
         min-height: calc( 100vh - 265px );
     }
 
@@ -127,6 +128,7 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 
         content: "\e904";
         color: #7f809d;
+        color: var(--colTextLight);
         padding-left: 4px;
         padding-right: 4px;
     }
@@ -159,6 +161,7 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
         width: 256px;
         border-radius: 15px;
         box-shadow: 0 1px 4px 0 rgba(4, 0, 71, 0.16);
+        box-shadow: 0 1px 4px 0 var(--colShadowDark);
         background-color: #ffffff;
         margin-right: 16px;
         margin-top: 8px;
@@ -206,6 +209,7 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
         max-width: 944px;
         border-radius: 15px;
         box-shadow: 0 1px 4px 0 rgba(4, 0, 71, 0.16);
+        box-shadow: 0 1px 4px 0 var(--colShadowDark);
         background-color: #ffffff;
         padding: 16px 36px 16px 36px;
         margin-top: 16px;
@@ -270,6 +274,7 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
         width: 100%;
         text-align: center;
         color: #7f809d;
+        color: var(--colTextLight);
     }
     
     .RateButton i.fa-star {
@@ -279,6 +284,7 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
     .RateButton.RateChecked i.fa-star {
         display: block;
         color: #001bff;
+        color: var(--colMainLight);
     }
     
     .RateButton.RateChecked i.fa-star-o {
@@ -287,6 +293,7 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
     
     .RateButton:hover i.fa-star-o {
         color: #00023c;
+        color: var(--colMainDark);
     }
     
     .RateStar {
