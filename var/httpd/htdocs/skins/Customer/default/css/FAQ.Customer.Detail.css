@@ -133,6 +133,11 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
         padding-right: 4px;
     }
 
+    #oooCustomerNotifications {
+        background-color: #f7f7f9;
+        background-color: var(--colBGLight);
+    }
+
     .WidgetSimple {
         max-width: 1050px;
     }
