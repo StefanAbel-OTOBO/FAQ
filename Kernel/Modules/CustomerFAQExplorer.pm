@@ -162,6 +162,9 @@ sub Run {
                 Name       => $SearchName,
             },
         );
+
+        # disable category specific stuff
+        $CategoryID = -1;
     }
 
     # no search ( standard mode )
@@ -238,8 +241,8 @@ sub Run {
         UserID => $Self->{UserID},
     );
 
-    # include Category if it's set to not 0, or if it's no search even then
-    if ( $CategoryID ) {
+    # include Category if not in base Category (0), or search mode
+    if ( $CategoryID > 0 ) {
         $FAQSearch{CategoryIDs} = [$CategoryID],
     }
 

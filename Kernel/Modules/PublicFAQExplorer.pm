@@ -18,6 +18,7 @@ package Kernel::Modules::PublicFAQExplorer;
 
 use strict;
 use warnings;
+use Kernel::Language qw(Translatable);
 
 use MIME::Base64 qw();
 
@@ -149,29 +150,59 @@ sub Run {
 
     my $Output = $LayoutObject->CustomerHeader();
 
-    # show FAQ path
-    $LayoutObject->FAQPathShow(
-        FAQObject  => $FAQObject,
-        CategoryID => $CategoryID,
-        UserID     => $Self->{UserID},
-    );
+    my $CategoryIDsRef;
+    my %Search;
+    my %FAQSearch;
 
-    # get all direct subcategories of the selected category
-    my $CategoryIDsRef = $FAQObject->PublicCategorySearch(
-        ParentID => $CategoryID,
-        Mode     => 'Public',
-        UserID   => $Self->{UserID},
-    );
+    # show search results
+    if ( $Self->{Subaction} && $Self->{Subaction} eq 'Search' ) {
+        my $SearchName = Translatable("Search").":";
+        for my $Mode ( qw/Keyword What/ ) {
+            my $String = $ParamObject->GetParam( Param => $Mode );
+            if ( $String ) {
+                $Search{ $Mode } = $String;
+                $FAQSearch{ $Mode } = "*$String*";
+                my $ModeName = $Mode eq 'What' ? 'Fulltext' : $Mode;
+                $SearchName .= " ".Translatable($ModeName)." \"$String\";";
+            }
+        }
 
-    # show subcategories list
-    $LayoutObject->Block(
-        Name => 'Subcategories',
-        Data => {},
-    );
-    $LayoutObject->Block(
-        Name => 'OverviewResult',
-        Data => {},
-    );
+        # output category root ( done in LayoutObject for non searches )
+        $LayoutObject->Block(
+            Name => 'FAQPathCategoryElement',
+            Data => {
+                Name       => $ConfigObject->Get('FAQ::Default::RootCategoryName'),
+                CategoryID => 0,
+            },
+        );
+        # output search information
+        $LayoutObject->Block(
+            Name => 'FAQPathCategoryElementNoLink',
+            Data => {
+                Name       => $SearchName,
+            },
+        );
+
+        # disable category specific stuff
+        $CategoryID = -1;
+    }
+
+    # no search ( standard mode )
+    else { 
+        # show FAQ path
+        $LayoutObject->FAQPathShow(
+            FAQObject  => $FAQObject,
+            CategoryID => $CategoryID,
+            UserID     => $Self->{UserID},
+        );
+
+        # get all direct subcategories of the selected category
+        $CategoryIDsRef = $FAQObject->PublicCategorySearch(
+            ParentID     => $CategoryID,
+            Mode         => 'Public',
+            UserID       => $Self->{UserID},
+        );
+    }
 
     # get interface state list
     my $InterfaceStates = $FAQObject->StateTypeList(
@@ -181,6 +212,16 @@ sub Run {
 
     # check if there are subcategories
     if ( $CategoryIDsRef && ref $CategoryIDsRef eq 'ARRAY' && @{$CategoryIDsRef} ) {
+
+        # show subcategories list
+        $LayoutObject->Block(
+            Name => 'Subcategories',
+            Data => {},
+        );
+        $LayoutObject->Block(
+            Name => 'OverviewResult',
+            Data => {},
+        );
 
         # show data for each subcategory
         for my $SubCategoryID ( @{$CategoryIDsRef} ) {
@@ -213,18 +254,23 @@ sub Run {
         }
     }
 
-    # otherwise a no data found message is displayed
-    else {
-        $LayoutObject->Block(
-            Name => 'NoCategoryDataFoundMsg',
-        );
-    }
-
     # set default interface settings
     my $Interface = $FAQObject->StateTypeGet(
         Name   => 'public',
         UserID => $Self->{UserID},
     );
+
+    # include Category if not in base Category (0), or search mode
+    if ( $CategoryID > 0 ) {
+        $FAQSearch{CategoryIDs} = [$CategoryID],
+    }
+
+    # get the latest articles for the root category (else empty)
+    elsif ( !%Search ) {
+        $SortBy = 'Changed';
+        $OrderBy = 'Down';
+        $SearchLimit = 10;
+    }
 
     # search all FAQ articles within the given category
     my @ViewableItemIDs = $FAQObject->FAQSearch(
@@ -234,7 +280,7 @@ sub Run {
         UserID           => $Self->{UserID},
         States           => $InterfaceStates,
         Interface        => $Interface,
-        CategoryIDs      => [$CategoryID],
+        %FAQSearch,
     );
 
     # set the SortBy Class
@@ -346,6 +392,20 @@ sub Run {
 
     my $Link = 'SortBy=' . $LayoutObject->LinkEncode($SortBy) . ';';
     $Link .= 'Order=' . $LayoutObject->LinkEncode($OrderBy) . ';';
+
+    my $ActionString;
+    if ( %Search ) {
+        $ActionString = "Action=PublicFAQExplorer;Subaction=Search;";
+		if ( $FAQSearch{CategoryIDs} ) {
+			$ActionString .= "CategoryID=$CategoryID;";
+		}
+		for my $Mode ( keys %Search ) {
+			$ActionString .= "$Mode=$Search{ $Mode };";
+		}
+    }
+    else {
+        $ActionString = "Action=PublicFAQExplorer;CategoryID=$CategoryID";
+    }
 
     # build search navigation bar
     my %PageNav = $LayoutObject->PageNavBar(
