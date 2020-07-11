@@ -94,7 +94,7 @@
 [% RenderBlockEnd("NoFAQDataFoundMsg") %]
 [% RenderBlockStart("Record") %]
                 <a class="oooFAQ" href="[% Env("Baselink") %]Action=PublicFAQZoom;ItemID=[% Data.FAQID | uri %]">
-                    <h3 class="Title" title="[% Data.Title | html %]">[% Data.CleanTitle | html %]</h3>
+                    <h3 class="Title" title="[% Data.Title | html %]">[% Data.Title | html %]</h3>
 [% RenderBlockStart("RecordLanguage") %]
                     <p class="Language ooog" title="[% Data.Language | html %]">[% Data.Language | truncate(5) | html %]</p>
 [% RenderBlockEnd("RecordLanguage") %]
