@@ -495,8 +495,8 @@
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="SMALLINT"></Column>
             <Column Name="name" Required="true" Size="200" Type="VARCHAR"></Column>
             <Unique Name="faq_language_name">
-                                                                <UniqueColumn Name="name"></UniqueColumn>
-</Unique>
+                <UniqueColumn Name="name"></UniqueColumn>
+            </Unique>
         </TableCreate>
         <Insert Type="post" Table="faq_language">
             <Data Key="name" Type="Quote">en</Data>
@@ -508,8 +508,8 @@
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="SMALLINT"></Column>
             <Column Name="name" Required="true" Size="200" Type="VARCHAR"></Column>
             <Unique Name="faq_state_type_name">
-                                                                <UniqueColumn Name="name"></UniqueColumn>
-</Unique>
+                <UniqueColumn Name="name"></UniqueColumn>
+            </Unique>
         </TableCreate>
         <Insert Type="post" Table="faq_state_type">
             <Data Key="name" Translatable="1" Type="Quote">internal</Data>
@@ -525,8 +525,8 @@
             <Column Name="name" Required="true" Size="200" Type="VARCHAR"></Column>
             <Column Name="type_id" Required="true" Type="INTEGER"></Column>
             <Unique Name="faq_state_name">
-                                                                <UniqueColumn Name="name"></UniqueColumn>
-</Unique>
+                <UniqueColumn Name="name"></UniqueColumn>
+            </Unique>
             <Index Name="faq_state_type_id">
                 <IndexColumn Name="type_id">
                 </IndexColumn>
