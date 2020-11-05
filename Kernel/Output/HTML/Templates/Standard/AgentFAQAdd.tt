@@ -62,6 +62,14 @@
                         [% Data.StateOption %]
                     </div>
                     <div class="Clear"></div>
+                    
+<!-- FAQ change Service -->
+                    <label for="ServiceID">[% Translate("Service") | html %]:</label>
+                    <div class="Field">
+                        [% Data.ServiceOption %]
+                    </div>
+                    <div class="Clear"></div>
+<!-- EO FAQ change Service -->
 
                     <label for="ValidID">[% Translate("Validity") | html %]:</label>
                     <div class="Field">
