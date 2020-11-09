@@ -535,7 +535,6 @@ sub _MaskNew {
     }
 
     # Build the state selection.
-    ##Option => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->BuildSelection(
     $Data{ServiceOption} = $LayoutObject->BuildSelection(
         Data        => \%ServiceList,
         Name        => 'ServiceID',
