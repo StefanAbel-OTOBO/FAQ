@@ -62,7 +62,10 @@ sub Run {
     # Get parameters from web request.
     my %GetParam;
     for my $ParamName (
-        qw(Title CategoryID StateID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
+# FAQ Service
+        ##qw(Title CategoryID StateID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
+        qw(Title CategoryID StateID ServiceID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
+# eo FAQ Service
         )
     {
         $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
@@ -509,6 +512,50 @@ sub _MaskNew {
         Translation   => 1,
         Class         => 'Modernize',
     );
+# FAQ Service change 2020-11
+
+    # get all services
+    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+        Valid        => 1,
+        UserID       => $Self->{UserID},
+    );
+
+    # get param object
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    my @CustomServiceIDs;
+    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+    }
+    elsif ( $Param{UserData}->{UserID} && !defined $CustomServiceIDs[0] ) {
+        @CustomServiceIDs = $Kernel::OM->Get('Kernel::System::Service')->GetAllCustomServices(
+            UserID => $Param{UserData}->{UserID}
+        );
+    }
+
+    # Build the state selection.
+    ##Option => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->BuildSelection(
+    $Data{ServiceOption} = $LayoutObject->BuildSelection(
+        Data        => \%ServiceList,
+        Name        => 'ServiceID',
+        Class       => 'Modernize',
+        Multiple    => 1,
+        Size        => 10,
+        SelectedID  => \@CustomServiceIDs,
+        Sort        => 'AlphanumericValue',
+        Translation => 0,
+        TreeView    => 1,
+    );
+    $LayoutObject->Block(
+        Name => 'TicketService',
+        Data => {
+            ServiceMandatory => $ConfigObject->{ServiceMandatory} || 0,
+            %Param,
+        },
+    );
+
+## eo FAQ Service change 2020-11
 
     # Show attachments.
     ATTACHMENT:
