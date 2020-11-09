@@ -295,7 +295,9 @@ sub Run {
 
             return $Output;
         }
-
+use Data::Dumper;
+print STDERR '%GetParam: ',Dumper(\%GetParam),"n";
+# 'ServiceID' => '1',
         # Add the new FAQ item.
         my $ItemID = $FAQObject->FAQAdd(
             %GetParam,

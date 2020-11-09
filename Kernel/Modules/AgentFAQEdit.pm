@@ -815,6 +815,49 @@ sub _MaskNew {
         Translation   => 1,
         Class         => 'Modernize',
     );
+# FAQ Service change 2020-11
+
+    # get all services
+    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+        Valid        => 1,
+        UserID       => $Self->{UserID},
+    );
+
+    # get param object
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    my @CustomServiceIDs;
+    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+    }
+    elsif ( $Param{UserData}->{UserID} && !defined $CustomServiceIDs[0] ) {
+        @CustomServiceIDs = $Kernel::OM->Get('Kernel::System::Service')->GetAllCustomServices(
+            UserID => $Param{UserData}->{UserID}
+        );
+    }
+
+    # Build the state selection.
+    $Data{ServiceOption} = $LayoutObject->BuildSelection(
+        Data        => \%ServiceList,
+        Name        => 'ServiceID',
+        Class       => 'Modernize',
+        Multiple    => 1,
+        Size        => 10,
+        SelectedID  => \@CustomServiceIDs,
+        Sort        => 'AlphanumericValue',
+        Translation => 0,
+        TreeView    => 1,
+    );
+    $LayoutObject->Block(
+        Name => 'TicketService',
+        Data => {
+            ServiceMandatory => $ConfigObject->{ServiceMandatory} || 0,
+            %Param,
+        },
+    );
+
+## eo FAQ Service change 2020-11
 
     # Get screen type.
     my $ScreenType = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ScreenType' ) || '';

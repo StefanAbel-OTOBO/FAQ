@@ -234,7 +234,7 @@ sub FAQGet {
 
     # otherwise get %Data from the DB
     else {
-
+# FAQ Service change 2020-11
         return if !$DBObject->Prepare(
             SQL => '
                 SELECT i.f_name, i.f_language_id, i.f_subject, i.created, i.created_by, i.changed,
@@ -249,7 +249,7 @@ sub FAQGet {
             Bind  => [ \$Param{ItemID} ],
             Limit => 1,
         );
-
+## eo FAQ Service change 2020-11
         while ( my @Row = $DBObject->FetchrowArray() ) {
 
             %Data = (
