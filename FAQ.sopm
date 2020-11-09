@@ -532,6 +532,18 @@
                 </IndexColumn>
             </Index>
         </TableCreate>
+<!-- FAQ service -->
+        <TableCreate Type="post" Name="faq_service">
+            <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="INTEGER"></Column>
+            <Column Name="name" Required="true" Size="200" Type="VARCHAR"></Column>
+            <Column Name="service_id" Required="true" Type="INTEGER"></Column>
+            <Column Name="item_id" Required="true" Type="INTEGER"></Column>
+            <Index Name="faq_service_id">
+                <IndexColumn Name="service_id">
+                </IndexColumn>
+            </Index>
+        </TableCreate>
+<!-- eo FAQ service -->
         <TableCreate Type="post" Name="faq_category">
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="INTEGER"></Column>
             <Column Name="parent_id" Required="true" Type="INTEGER"></Column>
@@ -821,6 +833,10 @@
         </TableDrop>
         <TableDrop Type="pre" Name="faq_state">
         </TableDrop>
+<!-- FAQ service -->
+        <TableDrop Type="pre" Name="faq_service">
+        </TableDrop>
+<!-- eo FAQ service -->
         <TableDrop Type="pre" Name="faq_state_type">
         </TableDrop>
         <TableDrop Type="pre" Name="faq_language">
