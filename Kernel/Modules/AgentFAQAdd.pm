@@ -209,7 +209,23 @@ sub Run {
                 $Error{ $ParamName . 'ServerError' } = 'ServerError';
             }
         }
+## FAQ Service
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
+    # get all services
+    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+        Valid        => 1,
+        UserID       => $Self->{UserID},
+    );
+
+    my @CustomServiceIDs;
+    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+    }
+    $GetParam{ServiceID} 	= \@CustomServiceIDs;
+    $GetParam{ServiceList} 	= \%ServiceList;
+## eo FAQ Service
         # Create HTML strings for all dynamic fields.
         my %DynamicFieldHTML;
 
@@ -522,7 +538,7 @@ sub _MaskNew {
         Valid        => 1,
         UserID       => $Self->{UserID},
     );
-
+print STDERR '%ServiceList',Dumper(\%ServiceList),"\n";
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 

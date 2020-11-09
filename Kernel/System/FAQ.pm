@@ -673,6 +673,24 @@ sub FAQAdd {
         UserID => $Param{UserID},
     );
 
+## FAQ Service
+use Data::Dumper;
+print STDERR '$Param{ServiceList}: ',Dumper($Param{ServiceList}),"\n";
+    # add services
+
+    if ( $Param{ServiceID} ) {
+		for my $ServiceID ( @{$Param{ServiceID}} ) {
+			my $AddSuccess = $Self->FAQServiceAdd(
+        		ItemID    => $ID,
+        		ServiceID => $ServiceID,
+        		Name      => $Param{ServiceList}->{$ServiceID},
+    		);
+print STDERR 'FAQServiceAdd failed: ',$ServiceID,"\n" unless $AddSuccess;
+		}
+    }
+
+## eo FAQ Service
+
     # check if approval feature is enabled
     if ( $ConfigObject->Get('FAQ::ApprovalRequired') && !$Param{Approved} ) {
 
@@ -1366,6 +1384,49 @@ sub FAQDelete {
 
     return 1;
 }
+
+## FAQ Service
+=head2 FAQServiceAdd()
+
+add services to an article
+
+    my $AddSuccess = $FAQObject->FAQServiceAdd(
+        ItemID => 1,
+        ServiceID => 1,
+        Name   => 'Service Name',
+    );
+
+Returns:
+
+    $AddSuccess = 1;               # or undef if article service could not be added
+
+=cut
+
+sub FAQServiceAdd {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ItemID Name ServiceID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL => 'INSERT INTO faq_service (name, service_id, item_id)' .
+            ' VALUES ( ?, ?, ?)',
+        Bind => [
+            \$Param{Name}, \$Param{ServiceID}, \$Param{ItemID},
+        ],
+    );
+
+    return 1;
+}
+## eo FAQ Service
 
 =head2 FAQHistoryAdd()
 
