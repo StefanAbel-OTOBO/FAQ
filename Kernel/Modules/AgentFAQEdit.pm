@@ -77,7 +77,7 @@ sub Run {
     }
 
     my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
-
+# FAQ Service # TODO
     my %FAQData = $FAQObject->FAQGet(
         ItemID        => $GetParam{ItemID},
         ItemFields    => 1,
@@ -836,6 +836,9 @@ sub _MaskNew {
             UserID => $Param{UserData}->{UserID}
         );
     }
+    my %CustomServiceIDsUnique = %{$Param{ServiceList}};
+    map { $CustomServiceIDsUnique{$_}++ } @CustomServiceIDs;
+    @CustomServiceIDs = keys %CustomServiceIDsUnique;
 
     # Build the state selection.
     $Data{ServiceOption} = $LayoutObject->BuildSelection(

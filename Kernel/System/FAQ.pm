@@ -389,6 +389,27 @@ sub FAQGet {
         }
     }
 
+# FAQ Service
+
+# $GetParam{ServiceList}         = \%ServiceList;
+# {
+#           Name      => 'Computer::Hardware',
+#           ServiceID => 2,
+# }
+    ## if ($FetchItemFields) { # TODO: Cache?
+        if ( $Param{ItemFields} ) {
+            my $ServicesRelated = $Self->FAQServiceGet(
+                ItemID => $Param{ItemID},
+            );
+            if ( $ServicesRelated ) {
+                    for my $Service ( @$ServicesRelated ) {
+                        $Data{ServiceList}->{ $Service->{'ServiceID'} } = $Service->{ 'Name' };
+                    }
+            }
+    }
+
+# eo FAQ Service
+
     return %Data;
 }
 
@@ -674,19 +695,18 @@ sub FAQAdd {
     );
 
 ## FAQ Service
-use Data::Dumper;
-print STDERR '$Param{ServiceList}: ',Dumper($Param{ServiceList}),"\n";
+
     # add services
 
     if ( $Param{ServiceID} ) {
-		for my $ServiceID ( @{$Param{ServiceID}} ) {
-			my $AddSuccess = $Self->FAQServiceAdd(
-        		ItemID    => $ID,
-        		ServiceID => $ServiceID,
-        		Name      => $Param{ServiceList}->{$ServiceID},
-    		);
+        for my $ServiceID ( @{$Param{ServiceID}} ) {
+            my $AddSuccess = $Self->FAQServiceAdd(
+                ItemID    => $ID,
+                ServiceID => $ServiceID,
+                Name      => $Param{ServiceList}->{$ServiceID},
+            );
 print STDERR 'FAQServiceAdd failed: ',$ServiceID,"\n" unless $AddSuccess;
-		}
+        }
     }
 
 ## eo FAQ Service
@@ -1386,6 +1406,7 @@ sub FAQDelete {
 }
 
 ## FAQ Service
+
 =head2 FAQServiceAdd()
 
 add services to an article
@@ -1426,6 +1447,113 @@ sub FAQServiceAdd {
 
     return 1;
 }
+
+=head2 FAQServiceGet()
+
+get an array with hash reference with the services of an article
+
+    my $ServiceDataArrayRef = $FAQObject->FAQServiceGet(
+        ItemID => 1,
+    );
+
+Returns:
+
+    $ServiceDataArrayRef = [
+        {
+            Name      => 'Computer',
+            ServiceID => 1,
+        },
+        {
+            Name      => 'Computer::Hardware',
+            ServiceID => 2,
+        },
+    ];
+
+=cut
+
+sub FAQServiceGet {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ItemID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    return if !$DBObject->Prepare(
+        SQL => '
+            SELECT name, service_id
+            FROM faq_service
+            WHERE item_id = ?
+            ORDER BY name, service_id',
+        Bind => [ \$Param{ItemID} ],
+    );
+# $GetParam{ServiceList}         = \%ServiceList;
+
+    my @Data;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        my %Record = (
+            Name      => $Row[0],
+            ServiceID => $Row[1],
+        );
+        push @Data, \%Record;
+    }
+
+    return \@Data;
+
+=pod
+    my %ServiceList;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        $ServiceList{$Row[1]} = $Row[0];
+    }
+
+    return \%ServiceList;
+=cut
+}
+
+=head2 FAQServiceDelete()
+
+delete the service of an article
+
+    my $DeleteSuccess = $FAQObject->FAQHistoryDelete(
+        ItemID    => 1,
+        ServiceID => 1,
+    );
+
+Returns:
+
+    $DeleteSuccess = 1;                # or undef if service could not be deleted
+
+=cut
+
+sub FAQServiceyDelete {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ItemID ServiceID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+            return;
+        }
+    }
+
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL  => 'DELETE FROM faq_service WHERE item_id = ? AND service_id = ? ',
+        Bind => [ \$Param{ItemID}, \$Param{ServiceID}, ],
+    );
+
+    return 1;
+}
+
 ## eo FAQ Service
 
 =head2 FAQHistoryAdd()
