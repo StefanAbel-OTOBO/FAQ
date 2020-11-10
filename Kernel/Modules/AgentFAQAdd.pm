@@ -311,9 +311,7 @@ sub Run {
 
             return $Output;
         }
-use Data::Dumper;
-print STDERR '%GetParam: ',Dumper(\%GetParam),"n";
-# 'ServiceID' => '1',
+
         # Add the new FAQ item.
         my $ItemID = $FAQObject->FAQAdd(
             %GetParam,
@@ -538,7 +536,7 @@ sub _MaskNew {
         Valid        => 1,
         UserID       => $Self->{UserID},
     );
-print STDERR '%ServiceList',Dumper(\%ServiceList),"\n";
+
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 

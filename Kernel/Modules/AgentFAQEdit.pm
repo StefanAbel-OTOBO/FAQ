@@ -481,6 +481,24 @@ sub Run {
         if ( $LayoutObject->{BrowserRichText} && $ConfigObject->Get('FAQ::Item::HTML') ) {
             $ContentType = 'text/html';
         }
+# FAQ Service
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    # get all services
+    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+        Valid        => 1,
+        UserID       => $Self->{UserID},
+    );
+
+    my @CustomServiceIDs;
+    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+    }
+    $GetParam{ServiceID} 	= \@CustomServiceIDs;
+    $GetParam{ServiceList} 	= \%ServiceList;
+
+# eo FAQ Service
 
         # Update the new FAQ item.
         my $UpdateSuccess = $FAQObject->FAQUpdate(

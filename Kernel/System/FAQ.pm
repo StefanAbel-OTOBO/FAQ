@@ -234,7 +234,7 @@ sub FAQGet {
 
     # otherwise get %Data from the DB
     else {
-# FAQ Service change 2020-11
+
         return if !$DBObject->Prepare(
             SQL => '
                 SELECT i.f_name, i.f_language_id, i.f_subject, i.created, i.created_by, i.changed,
@@ -249,7 +249,7 @@ sub FAQGet {
             Bind  => [ \$Param{ItemID} ],
             Limit => 1,
         );
-## eo FAQ Service change 2020-11
+
         while ( my @Row = $DBObject->FetchrowArray() ) {
 
             %Data = (
@@ -397,15 +397,15 @@ sub FAQGet {
 #           ServiceID => 2,
 # }
     ## if ($FetchItemFields) { # TODO: Cache?
-        if ( $Param{ItemFields} ) {
-            my $ServicesRelated = $Self->FAQServiceGet(
+    if ( $Param{ItemFields} ) {
+        my $ServicesRelated = $Self->FAQServiceGet(
                 ItemID => $Param{ItemID},
-            );
-            if ( $ServicesRelated ) {
-                    for my $Service ( @$ServicesRelated ) {
-                        $Data{ServiceList}->{ $Service->{'ServiceID'} } = $Service->{ 'Name' };
-                    }
+        );
+        if ( $ServicesRelated ) {
+            for my $Service ( @$ServicesRelated ) {
+                $Data{ServiceList}->{ $Service->{'ServiceID'} } = $Service->{ 'Name' };
             }
+        }
     }
 
 # eo FAQ Service
@@ -705,7 +705,7 @@ sub FAQAdd {
                 ServiceID => $ServiceID,
                 Name      => $Param{ServiceList}->{$ServiceID},
             );
-print STDERR 'FAQServiceAdd failed: ',$ServiceID,"\n" unless $AddSuccess;
+#print STDERR 'FAQServiceAdd failed: ',$ServiceID,"\n" unless $AddSuccess;
         }
     }
 
@@ -798,6 +798,46 @@ sub FAQUpdate {
     if ( !defined $Param{ValidID} ) {
         $Param{ValidID} = $FAQData{ValidID};
     }
+
+# FAQ Services
+
+	my $ServicesInDB = $Self->FAQServiceGet(
+        ItemID => $Param{ItemID},
+    );
+
+    my %ServicesInDB;
+    map { $ServicesInDB{$_->{ServiceID}}++ } @{$ServicesInDB};
+
+	#if ( ref $FAQData{ServiceList} eq 'HASH' ) {
+	#    %ServicesInDB = %{$FAQData{ServiceList}};
+	#}
+
+    if ( $Param{ServiceID} ) {
+        SERVICEID: for my $ServiceID ( @{$Param{ServiceID}} ) {
+            if ( exists $ServicesInDB{$ServiceID} ) {
+               delete $ServicesInDB{$ServiceID};
+               next SERVICEID;
+            }
+            else {
+                my $AddSuccess = $Self->FAQServiceAdd(
+                    ItemID    => $Param{ItemID},
+                    ServiceID => $ServiceID,
+                    Name      => $Param{ServiceList}->{$ServiceID},
+                );
+            }
+        }
+    }
+    for my $ServiceID ( keys %ServicesInDB ) {
+        my $DeleteSuccess = $Self->FAQServiceDelete(
+            ItemID    => $Param{ItemID},
+            ServiceID => $ServiceID,
+        );
+    }
+
+    # delete cache
+    $Self->_DeleteFromFAQCache(%Param); # TODO: check if changed
+
+# eo FAQ Services
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL => '
@@ -1522,7 +1562,7 @@ sub FAQServiceGet {
 
 delete the service of an article
 
-    my $DeleteSuccess = $FAQObject->FAQHistoryDelete(
+    my $DeleteSuccess = $FAQObject->FAQServiceDelete(
         ItemID    => 1,
         ServiceID => 1,
     );
@@ -1533,7 +1573,7 @@ Returns:
 
 =cut
 
-sub FAQServiceyDelete {
+sub FAQServiceDelete {
     my ( $Self, %Param ) = @_;
 
     for my $Argument (qw(ItemID ServiceID)) {
