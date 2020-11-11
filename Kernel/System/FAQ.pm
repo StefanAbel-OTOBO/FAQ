@@ -1429,6 +1429,23 @@ sub FAQDelete {
         UserID => $Param{UserID},
     );
 
+# FAQ Service
+    # delete all related services
+    my $ServiceDataArrayRef = $Self->FAQServiceGet(
+        ItemID => $Param{ItemID},
+    );
+
+    for my $Service ( @{$ServiceDataArrayRef} ) {
+        my $DeleteSuccess = $Self->FAQServiceDelete(
+            ItemID    => $Param{ItemID},
+            ServiceID => $Service->{ServiceID},
+        );
+
+        return if !$DeleteSuccess;
+    }
+
+# eo FAQ Service
+
     # delete article
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL  => 'DELETE FROM faq_item WHERE id = ?',
