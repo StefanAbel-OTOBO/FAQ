@@ -801,16 +801,12 @@ sub FAQUpdate {
 
 # FAQ Services
 
-	my $ServicesInDB = $Self->FAQServiceGet(
+    my $ServicesInDB = $Self->FAQServiceGet(
         ItemID => $Param{ItemID},
     );
 
     my %ServicesInDB;
     map { $ServicesInDB{$_->{ServiceID}}++ } @{$ServicesInDB};
-
-	#if ( ref $FAQData{ServiceList} eq 'HASH' ) {
-	#    %ServicesInDB = %{$FAQData{ServiceList}};
-	#}
 
     if ( $Param{ServiceID} ) {
         SERVICEID: for my $ServiceID ( @{$Param{ServiceID}} ) {
@@ -2043,7 +2039,12 @@ sub FAQKeywordArticleList {
     if (@LanguageIDs) {
         $FAQSearchParameter{LanguageIDs} = \@LanguageIDs;
     }
-
+# FAQ Service
+    my $ServiceID = 0;
+    if ( exists $Param{ServiceID} && $Param{ServiceID} ) {
+        $ServiceID = $Param{ServiceID};
+    }
+# eo FAQ Service
     # Get the relevant FAQ article for the current customer user.
     my @FAQArticleIDs = $Self->FAQSearch(
         %FAQSearchParameter,
@@ -2052,6 +2053,9 @@ sub FAQKeywordArticleList {
         OrderByDirection => ['Down'],
         Limit            => $SearchLimit,
         UserID           => 1,
+# FAQ Service TODO
+        ServiceID        => $ServiceID,
+# eo FAQ Service
     );
 
     my %KeywordArticeList;

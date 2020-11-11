@@ -196,6 +196,9 @@ sub _RelatedArticleList {
         KeywordArticleList => \%FAQKeywordArticleList,
         Limit              => $Param{Limit},
         UserID             => $Param{UserID},
+# FAQ Service
+	    ServiceID          => $Param{ServiceID}, # TODO necessary
+# eo FAQ Service
     );
 }
 

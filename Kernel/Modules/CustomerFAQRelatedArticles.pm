@@ -40,7 +40,9 @@ sub Run {
 
     my $Subject = $ParamObject->GetParam( Param => 'Subject' );
     my $Body    = $ParamObject->GetParam( Param => 'Body' );
-
+# FAQ Services
+	my $ServiceID = $ParamObject->GetParam( Param => 'ServiceID' );
+# eo FAQ Services
     my @RelatedFAQArticleList;
     my $RelatedFAQArticleFoundNothing;
 
@@ -48,7 +50,6 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     if ( $Subject || $Body ) {
-
         # Get the language from the user and add the default languages from the config.
         my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
 
@@ -61,6 +62,9 @@ sub Run {
         @RelatedFAQArticleList = $Kernel::OM->Get('Kernel::System::FAQ')->RelatedCustomerArticleList(
             Subject   => $Subject,
             Body      => $Body,
+# FAQ Service
+            ServiceID => $ServiceID,
+# eo FAQ Service
             Languages => $RelatedArticleLanguages,
             Limit     => $Config->{ShowLimit} || 10,
             UserID    => $Self->{UserID},

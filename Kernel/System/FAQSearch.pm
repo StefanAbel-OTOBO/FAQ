@@ -331,7 +331,17 @@ sub FAQSearch {
     my $SQL = 'SELECT i.id, count( v.item_id ) as votes, avg( v.rate ) as vrate '
         . 'FROM faq_item i '
         . 'LEFT JOIN faq_voting v ON v.item_id = i.id '
-        . 'LEFT JOIN faq_state s ON s.id = i.state_id';
+# FAQ Service
+        . 'LEFT JOIN faq_state s ON s.id = i.state_id ';
+
+    my $ServiceID = 0;
+    if ( exists $Param{ServiceID} && $Param{ServiceID} ) {
+        $ServiceID = $Param{ServiceID};
+
+        $SQL .= 'LEFT JOIN faq_service se ON se.item_id = i.id ';
+    }
+
+# eo FAQ Service
 
     # extended SQL
     my $Ext = '';
@@ -493,6 +503,20 @@ sub FAQSearch {
         }
         $Ext .= $InString;
     }
+
+# FAQ Service
+    # search for service
+    if ( exists $Param{ServiceID} && $Param{ServiceID} ) {
+
+        my $SQLString = '( se.service_id=' . $Param{ServiceID} . ' )';
+
+        if ($Ext) {
+            $Ext .= ' AND ';
+        }
+        $Ext .= $SQLString;
+    }
+# eo FAQ Service
+
 
     # search for keywords
     if ( $Param{Keyword} ) {
