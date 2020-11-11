@@ -125,11 +125,17 @@ sub Run {
             $QueuesEnabledStrg = "'$QueuesEnabledStrg'";
         }
     }
+# FAQ Service
+# TODO read the Config ???
+	my $ServicesEnabledStrg = 'Computer';
+	$ServicesEnabledStrg = "'$ServicesEnabledStrg'";
+# eo FAQ Service
 
     # TODO the JS should be moved in a own JS file with OTOBO 10!
     # inject the necessary JS into the template
     $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
 var QueuesEnabled = [ $QueuesEnabledStrg ],
+ServicesEnabled = [ $ServicesEnabledStrg ],
 LastData;
 
 Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
@@ -137,8 +143,13 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
     var SelectedQueue = \$(this).val(),
         SelectedQueueName = SelectedQueue.replace(/\\d*\\|\\|-?/, '');
 
-    if ( \$('#FAQRelatedArticles').hasClass('Hidden') && (!QueuesEnabled.length || !SelectedQueueName || \$.inArray(SelectedQueueName, QueuesEnabled) > -1) ) {
-        \$('#FAQRelatedArticles').removeClass('Hidden');
+    // XXX handle class hidden extra
+    // if ( \$('#FAQRelatedArticles').hasClass('Hidden') && (!QueuesEnabled.length || !SelectedQueueName || \$.inArray(SelectedQueueName, QueuesEnabled) > -1) ) {
+    if ( (!QueuesEnabled.length || !SelectedQueueName || \$.inArray(SelectedQueueName, QueuesEnabled) > -1) ) {
+
+		if ( \$('#FAQRelatedArticles').hasClass('Hidden') ) { // XXX handle class
+            \$('#FAQRelatedArticles').removeClass('Hidden');
+        }
 
         if (\$('#Subject').val() || CKEDITOR.instances['RichText'].getData()) {
             \$('#Subject').trigger('change');
@@ -148,6 +159,26 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
         \$('#FAQRelatedArticles').addClass('Hidden');
     }
 });
+
+// FAQ Service
+/* // TODO: Is it necessary at all?
+\$('#ServiceID').on('change.RelatedFAQArticle', function () {
+    var SelectedServiceID = \$(this).val(),
+        SelectedServiceIDName = SelectedServiceID.replace(/\\d*\\|\\|-?/, '');
+
+    if ( \$('#FAQRelatedArticles').hasClass('Hidden') && (!ServicesEnabled.length || !SelectedServiceIDName || \$.inArray(SelectedServiceIDName, ServicesEnabled) > -1) ) {
+        \$('#FAQRelatedArticles').removeClass('Hidden');
+
+        if (\$('#Subject').val() || CKEDITOR.instances['RichText'].getData()) {
+            \$('#Subject').trigger('change');
+        }
+    }
+    else if ( !SelectedServiceIDName || ( ServicesEnabled.length && \$.inArray(SelectedServiceIDName, ServicesEnabled) == -1 ) ) {
+        \$('#FAQRelatedArticles').addClass('Hidden');
+    }
+});
+*/
+// eo FAQ Service
 
 \$('#Subject').on('change', function (Event) {
     var SelectedQueue = \$('#Dest').val(),
@@ -163,7 +194,8 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
         Data = {
             Action: 'CustomerFAQRelatedArticles',
             Subject: \$('#Subject').val(),
-            Body: CKEDITOR.instances['RichText'].getData()
+            ServiceID: \$('#ServiceID').val(), // FAQ Service
+            Body: CKEDITOR.instances['RichText'].getData(),
         };
 
         if ( !LastData || LastData.Subject != Data.Subject || LastData.Body != Data.Body ) {
@@ -185,17 +217,20 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
 
                 \$('#Subject').removeData('RelatedFAQArticlesXHR');
 
-                // Remeber the last data to execute the ajax request only if necessary.
+                // Remember the last data to execute the ajax request only if necessary.
                 LastData = Data;
 
                 if ( \$('#FAQRelatedArticles').length ) {
 
                     \$('#FAQRelatedArticles').html(Response.CustomerRelatedFAQArticlesHTMLString);
+                    \$('#FAQRelatedArticles').removeClass('Hidden'); // XXX handle class
                     \$('#FAQRelatedArticles:not(.Hidden)').show();
                 }
 
                 if ( \$('#FAQRelatedArticles .Content > .FAQMiniList').length == 0 ) {
-                    \$('#FAQRelatedArticles').hide();
+                    // \$('#FAQRelatedArticles').hide(); // XXX: maybe the bug
+                    // XXX: is hidden necessary at all?
+                    // \$('#FAQRelatedArticles').addClass('Hidden');
                 }
             }));
         }
