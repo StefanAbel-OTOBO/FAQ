@@ -140,6 +140,8 @@ Returns:
         Created           => '2011-01-05 21:53:50',
         Name              => '1294286030-31.1697297104732',  # FAQ Article name or
                                                              # systemtime + '-' + random number
+        ServiceList       => { '1' => 'Computer' }           # Hash of related services
+
     );
 
     my %FAQ = $FAQObject->FAQGet(
@@ -188,6 +190,7 @@ Returns:
         Created           => '2011-01-05 21:53:50',
         Name              => '1294286030-31.1697297104732',  # FAQ Article name or
                                                              # systemtime + '-' + random number
+        ServiceList       => { '1' => 'Computer' }           # Hash of related services
     );
 
 =cut
@@ -333,6 +336,17 @@ sub FAQGet {
         # get valid list
         my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
         $Data{Valid} = $ValidList{ $Data{ValidID} };
+# FAQ Service
+        # get related services
+        my $ServicesRelated = $Self->FAQServiceGet(
+                ItemID => $Param{ItemID},
+        );
+        if ( $ServicesRelated ) {
+            for my $Service ( @$ServicesRelated ) {
+                $Data{ServiceList}->{ $Service->{'ServiceID'} } = $Service->{ 'Name' };
+            }
+        }
+# eo FAQ Service
 
         # cache result
         $CacheObject->Set(
@@ -388,27 +402,6 @@ sub FAQGet {
             $Data{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $Value;
         }
     }
-
-# FAQ Service
-
-# $GetParam{ServiceList}         = \%ServiceList;
-# {
-#           Name      => 'Computer::Hardware',
-#           ServiceID => 2,
-# }
-    ## if ($FetchItemFields) { # TODO: Cache?
-    if ( $Param{ItemFields} ) {
-        my $ServicesRelated = $Self->FAQServiceGet(
-                ItemID => $Param{ItemID},
-        );
-        if ( $ServicesRelated ) {
-            for my $Service ( @$ServicesRelated ) {
-                $Data{ServiceList}->{ $Service->{'ServiceID'} } = $Service->{ 'Name' };
-            }
-        }
-    }
-
-# eo FAQ Service
 
     return %Data;
 }
@@ -808,6 +801,7 @@ sub FAQUpdate {
     my %ServicesInDB;
     map { $ServicesInDB{$_->{ServiceID}}++ } @{$ServicesInDB};
 
+    my $ServicesChanged = 0;
     if ( $Param{ServiceID} ) {
         SERVICEID: for my $ServiceID ( @{$Param{ServiceID}} ) {
             if ( exists $ServicesInDB{$ServiceID} ) {
@@ -820,6 +814,7 @@ sub FAQUpdate {
                     ServiceID => $ServiceID,
                     Name      => $Param{ServiceList}->{$ServiceID},
                 );
+                $ServicesChanged++;
             }
         }
     }
@@ -828,10 +823,13 @@ sub FAQUpdate {
             ItemID    => $Param{ItemID},
             ServiceID => $ServiceID,
         );
+        $ServicesChanged++;
     }
 
     # delete cache
-    $Self->_DeleteFromFAQCache(%Param); # TODO: check if changed
+    if ( $ServicesChanged ) {
+        $Self->_DeleteFromFAQCache(%Param);
+    }
 
 # eo FAQ Services
 
