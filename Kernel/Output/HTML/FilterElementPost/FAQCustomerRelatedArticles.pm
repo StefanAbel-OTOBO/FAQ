@@ -162,12 +162,7 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
 
 // FAQ Service
 \$('#ServiceID').on('change', function (Event) {
-    var Value = \$('#ServiceID').val();
-
-    // trigger only the change event for the subject, if ServiceOnlyEnabled
-    if ( Value.length > 0 && ServiceOnlyEnabled > 0 ) {
-        \$('#Subject').trigger('change');
-    }
+    \$('#Subject').trigger('change');
 });
 // eo FAQ Service
 
@@ -189,7 +184,7 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
             Body: CKEDITOR.instances['RichText'].getData(),
         };
 
-        if ( !LastData || LastData.Subject != Data.Subject || LastData.Body != Data.Body ) {
+        if ( !LastData || LastData.Subject != Data.Subject || LastData.Body != Data.Body || LastData.ServiceID != Data.ServiceID ) {
 
             if (!\$('.FAQMiniList').length) {
                 \$('#FAQRelatedArticles .Content').html('<div class="Center"><span class="AJAXLoader" title="' + Core.Config.Get('LoadingMsg') + '"></span></div>');
