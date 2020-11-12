@@ -481,24 +481,24 @@ sub Run {
         if ( $LayoutObject->{BrowserRichText} && $ConfigObject->Get('FAQ::Item::HTML') ) {
             $ContentType = 'text/html';
         }
-# FAQ Service
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    # get all services
-    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
-        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
-        Valid        => 1,
-        UserID       => $Self->{UserID},
-    );
+        if ( $ConfigObject->Get('FAQ::Service') ) {
+            my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my @CustomServiceIDs;
-    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
-        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
-    }
-    $GetParam{ServiceID} 	= \@CustomServiceIDs;
-    $GetParam{ServiceList} 	= \%ServiceList;
+            # get all services
+            my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+                KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+                Valid        => 1,
+                UserID       => 1,
+            );
 
-# eo FAQ Service
+            my @ServiceIDs;
+            if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+                @ServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+            }
+            $GetParam{ServiceID} 	= \@ServiceIDs;
+            $GetParam{ServiceList} 	= \%ServiceList;
+        }
 
         # Update the new FAQ item.
         my $UpdateSuccess = $FAQObject->FAQUpdate(
@@ -833,52 +833,42 @@ sub _MaskNew {
         Translation   => 1,
         Class         => 'Modernize',
     );
-# FAQ Service change 2020-11
 
-    # get all services
-    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
-        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
-        Valid        => 1,
-        UserID       => $Self->{UserID},
-    );
+    if ( $ConfigObject->Get('FAQ::Service') ) {
+        # get all services
+        my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+            KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+            Valid        => 1,
+            UserID       => 1,
+        );
 
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+        # get param object
+        my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my @CustomServiceIDs;
-    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
-        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
-    }
-    elsif ( $Param{UserData}->{UserID} && !defined $CustomServiceIDs[0] ) {
-        @CustomServiceIDs = $Kernel::OM->Get('Kernel::System::Service')->GetAllCustomServices(
-            UserID => $Param{UserData}->{UserID}
+        my @ServiceIDs;
+        if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+            @ServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+        }
+
+        # Build the state selection.
+        my $ServiceHTML = $LayoutObject->BuildSelection(
+            Data        => \%ServiceList,
+            Name        => 'ServiceID',
+            Class       => 'Modernize',
+            Multiple    => 1,
+            Size        => 10,
+            SelectedID  => \@ServiceIDs,
+            Sort        => 'AlphanumericValue',
+            Translation => 0,
+            TreeView    => 1,
+        );
+        $LayoutObject->Block(
+            Name => 'Service',
+            Data => {
+                ServiceOption => $ServiceHTML,
+            },
         );
     }
-    my %CustomServiceIDsUnique = %{$Param{ServiceList}};
-    map { $CustomServiceIDsUnique{$_}++ } @CustomServiceIDs;
-    @CustomServiceIDs = keys %CustomServiceIDsUnique;
-
-    # Build the state selection.
-    $Data{ServiceOption} = $LayoutObject->BuildSelection(
-        Data        => \%ServiceList,
-        Name        => 'ServiceID',
-        Class       => 'Modernize',
-        Multiple    => 1,
-        Size        => 10,
-        SelectedID  => \@CustomServiceIDs,
-        Sort        => 'AlphanumericValue',
-        Translation => 0,
-        TreeView    => 1,
-    );
-    $LayoutObject->Block(
-        Name => 'TicketService',
-        Data => {
-            ServiceMandatory => $ConfigObject->{ServiceMandatory} || 0,
-            %Param,
-        },
-    );
-
-## eo FAQ Service change 2020-11
 
     # Get screen type.
     my $ScreenType = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ScreenType' ) || '';

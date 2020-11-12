@@ -63,7 +63,7 @@
                     </div>
                     <div class="Clear"></div>
                     
-<!-- FAQ change Service -->
+[% RenderBlockStart("Service") %]
                     [% IF Data.ServiceOption %]
                     <label for="ServiceID">[% Translate("Service") | html %]:</label>
                     [% END %]
@@ -71,7 +71,7 @@
                         [% Data.ServiceOption %]
                     </div>
                     <div class="Clear"></div>
-<!-- EO FAQ change Service -->
+[% RenderBlockEnd("Service") %]
 
                     <label for="ValidID">[% Translate("Validity") | html %]:</label>
                     <div class="Field">

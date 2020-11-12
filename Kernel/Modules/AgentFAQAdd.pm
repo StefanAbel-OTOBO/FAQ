@@ -62,10 +62,7 @@ sub Run {
     # Get parameters from web request.
     my %GetParam;
     for my $ParamName (
-# FAQ Service
-        ##qw(Title CategoryID StateID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
-        qw(Title CategoryID StateID ServiceID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
-# eo FAQ Service
+        qw(Title CategoryID StateID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
         )
     {
         $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
@@ -209,23 +206,25 @@ sub Run {
                 $Error{ $ParamName . 'ServerError' } = 'ServerError';
             }
         }
-## FAQ Service
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    # get all services
-    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
-        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
-        Valid        => 1,
-        UserID       => $Self->{UserID},
-    );
+        if ( $ConfigObject->Get('FAQ::Service') ) {
+            my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my @CustomServiceIDs;
-    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
-        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
-    }
-    $GetParam{ServiceID} 	= \@CustomServiceIDs;
-    $GetParam{ServiceList} 	= \%ServiceList;
-## eo FAQ Service
+            # get all services
+            my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+                KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+                Valid        => 1,
+                UserID       => $Self->{UserID},
+            );
+
+            my @ServiceIDs;
+            if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+                @ServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+            }
+            $GetParam{ServiceID} 	= \@ServiceIDs;
+            $GetParam{ServiceList} 	= \%ServiceList;
+        }
+
         # Create HTML strings for all dynamic fields.
         my %DynamicFieldHTML;
 
@@ -528,49 +527,42 @@ sub _MaskNew {
         Translation   => 1,
         Class         => 'Modernize',
     );
-# FAQ Service change 2020-11
 
-    # get all services
-    my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
-        KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
-        Valid        => 1,
-        UserID       => $Self->{UserID},
-    );
+    if ( $ConfigObject->Get('FAQ::Service') ) {
+        # get all services
+        my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+            KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+            Valid        => 1,
+            UserID       => 1,
+        );
 
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+        # get param object
+        my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my @CustomServiceIDs;
-    if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
-        @CustomServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
-    }
-    elsif ( $Param{UserData}->{UserID} && !defined $CustomServiceIDs[0] ) {
-        @CustomServiceIDs = $Kernel::OM->Get('Kernel::System::Service')->GetAllCustomServices(
-            UserID => $Param{UserData}->{UserID}
+        my @ServiceIDs;
+        if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
+            @ServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
+        }
+
+        # Build the state selection.
+        my $ServiceHTML = $LayoutObject->BuildSelection(
+            Data        => \%ServiceList,
+            Name        => 'ServiceID',
+            Class       => 'Modernize',
+            Multiple    => 1,
+            Size        => 10,
+            SelectedID  => \@ServiceIDs,
+            Sort        => 'AlphanumericValue',
+            Translation => 0,
+            TreeView    => 1,
+        );
+        $LayoutObject->Block(
+            Name => 'Service',
+            Data => {
+                ServiceOption => $ServiceHTML,
+            },
         );
     }
-
-    # Build the state selection.
-    $Data{ServiceOption} = $LayoutObject->BuildSelection(
-        Data        => \%ServiceList,
-        Name        => 'ServiceID',
-        Class       => 'Modernize',
-        Multiple    => 1,
-        Size        => 10,
-        SelectedID  => \@CustomServiceIDs,
-        Sort        => 'AlphanumericValue',
-        Translation => 0,
-        TreeView    => 1,
-    );
-    $LayoutObject->Block(
-        Name => 'TicketService',
-        Data => {
-            ServiceMandatory => $ConfigObject->{ServiceMandatory} || 0,
-            %Param,
-        },
-    );
-
-## eo FAQ Service change 2020-11
 
     # Show attachments.
     ATTACHMENT:

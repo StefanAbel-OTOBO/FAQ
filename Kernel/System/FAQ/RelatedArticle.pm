@@ -81,7 +81,8 @@ Get the related faq article list for the given subject and body.
     my @RelatedCustomerArticleList = $FAQObject->RelatedCustomerArticleList(
         Subject   => 'Title Example',
         Body      => 'Text Example',  # possible with html tags (will be removed for the search)
-        Languages =>[ 'en' ],         # optional
+        ServiceID => $ServiceID,      # optional
+        Languages => [ 'en' ],        # optional
         Limit     => 10,              # optional
         UserID    => 1,
     );
@@ -197,6 +198,7 @@ Get the related faq article list for the given subject and body.
     my @RelatedArticleList = $FAQObject->_RelatedArticleList(
         Subject      => 'Title Example',
         Body         => 'Text Example',  # possible with html tags (will be removed for the search)
+        ServiceID    => $ServiceID,      # optional
         Languages    =>[ 'en' ],         # optional
         Limit        => 10,              # optional
         CustomerUser => 'joe'            # optional
@@ -269,9 +271,6 @@ sub _RelatedArticleList {
         KeywordArticleList => \%FAQKeywordArticleList,
         Limit              => $Param{Limit},
         UserID             => $Param{UserID},
-# FAQ Service
-        ServiceID          => $Param{ServiceID}, # TODO necessary
-# eo FAQ Service
     );
 }
 

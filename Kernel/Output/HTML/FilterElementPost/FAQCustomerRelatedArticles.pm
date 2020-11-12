@@ -126,16 +126,10 @@ sub Run {
         }
     }
 
-# FAQ Service
-    my $ShowOnServiceOnly = $ConfigObject->Get('FAQ::Customer::RelatedArticlesServiceShow::Enabled');
-    my $ShowOnServiceOnlyStrg = "'$ShowOnServiceOnly'";
-# eo FAQ Service
-
     # TODO the JS should be moved in a own JS file with OTOBO 10!
     # inject the necessary JS into the template
     $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
 var QueuesEnabled = [ $QueuesEnabledStrg ],
-ServiceOnlyEnabled = $ShowOnServiceOnlyStrg,
 LastData;
 
 Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {

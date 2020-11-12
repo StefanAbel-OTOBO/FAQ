@@ -1996,6 +1996,7 @@ the given UserID, with a additional CustomerUser the list is only for the given 
         UserID       => 1,
         CustomerUser => 'tt',           # optional (with this the result is only customer faq article)
         Languages    => [ 'en', 'de' ], # optional
+        ServiceID    => $ServiceID,     # optional
     );
 
 Returns
@@ -2077,8 +2078,8 @@ sub FAQKeywordArticleList {
     }
     $CacheKey .= '::CategoryIDs' . join '::', sort @{$CategoryIDs};
     $CacheKey .= '::Interface::' . $Interface;
-    if ( exists $Param{ServiceID} && $Param{ServiceID} ) {
-        $CacheKey .= $Param{ServiceID};
+    if ( $Param{ServiceID} ) {
+        $CacheKey .= '::ServiceID::' . $Param{ServiceID};
     }
 
     my $Cache = $Kernel::OM->Get('Kernel::System::Cache')->Get(
@@ -2105,12 +2106,7 @@ sub FAQKeywordArticleList {
     if (@LanguageIDs) {
         $FAQSearchParameter{LanguageIDs} = \@LanguageIDs;
     }
-# FAQ Service
-    my $ServiceID = 0;
-    if ( exists $Param{ServiceID} && $Param{ServiceID} ) {
-        $ServiceID = $Param{ServiceID};
-    }
-# eo FAQ Service
+    
     # Get the relevant FAQ article for the current customer user.
     my @FAQArticleIDs = $Self->FAQSearch(
         %FAQSearchParameter,
@@ -2120,7 +2116,7 @@ sub FAQKeywordArticleList {
         Limit            => $SearchLimit,
         UserID           => 1,
 # FAQ Service TODO
-        ServiceID        => $ServiceID,
+        ServiceID        => $Param{ServiceID},
 # eo FAQ Service
     );
 

@@ -38,23 +38,26 @@ sub Run {
 
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Subject = $ParamObject->GetParam( Param => 'Subject' );
-    my $Body    = $ParamObject->GetParam( Param => 'Body' );
-# FAQ Services
+    my $Subject   = $ParamObject->GetParam( Param => 'Subject' );
+    my $Body      = $ParamObject->GetParam( Param => 'Body' );
     my $ServiceID = $ParamObject->GetParam( Param => 'ServiceID' );
-# eo FAQ Services
+    my %ServiceID = $ServiceID ? ( ServiceID => $ServiceID ) : ();
+
     my @RelatedFAQArticleList;
     my $RelatedFAQArticleFoundNothing;
 
     my $Config       = $Kernel::OM->Get('Kernel::Config')->Get("FAQ::Frontend::$Self->{Action}");
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-# FAQ Services
-    # get FAQs by service only, if FAQ::Customer::RelatedArticlesServiceShow::Enabled
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $ShowOnServiceOnly = $ConfigObject->Get('FAQ::Customer::RelatedArticlesServiceShow::Enabled');
 
-    if ( $Subject || $Body ) {
-# eo FAQ Services
+    # get FAQs by service only, if FAQ::Customer::RelatedArticlesOnServiceOnly
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $FAQServicesEnabled = $ConfigObject->Get('FAQ::Service');
+    my $ShowOnServiceOnly  = $ConfigObject->Get('FAQ::Customer::RelatedArticlesOnServiceOnly');
+
+    if ( $FAQServicesEnabled && !$ServiceID ) {
+        $RelatedFAQArticleFoundNothing = 1;
+    }
+    elsif ( $Subject || $Body ) {
         # Get the language from the user and add the default languages from the config.
         my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
 
@@ -65,11 +68,9 @@ sub Run {
         }
 
         @RelatedFAQArticleList = $Kernel::OM->Get('Kernel::System::FAQ')->RelatedCustomerArticleList(
+            %ServiceID,
             Subject   => $Subject,
             Body      => $Body,
-# FAQ Service
-            ServiceID => $ServiceID,
-# eo FAQ Service
             Languages => $RelatedArticleLanguages,
             Limit     => $Config->{ShowLimit} || 10,
             UserID    => $Self->{UserID},
@@ -79,8 +80,7 @@ sub Run {
             $RelatedFAQArticleFoundNothing = 1;
         }
     }
-# FAQ Services
-    elsif ( $ShowOnServiceOnly && $ServiceID ) {
+    elsif ( $FAQServicesEnabled && $ShowOnServiceOnly && $ServiceID ) {
 
         # Get the language from the user and add the default languages from the config.
         my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
@@ -92,7 +92,7 @@ sub Run {
         }
 
         @RelatedFAQArticleList = $Kernel::OM->Get('Kernel::System::FAQ')->RelatedCustomerServiceArticleList(
-            ServiceID => $ServiceID,
+            %ServiceID,
             Languages => $RelatedArticleLanguages,
             Limit     => $Config->{ShowLimit} || 10,
             UserID    => $Self->{UserID},
