@@ -2717,6 +2717,15 @@ Your OTOBO Notification Master
             <Item ValueType="Checkbox">1</Item>
         </Value>
     </Setting>
+<!-- FAQ Service -->
+    <Setting Name="FAQ::Customer::RelatedArticlesServiceShow::Enabled" Required="0" Valid="1">
+        <Description Translatable="1">Enable show related article on service change feature for the customer frontend.</Description>
+        <Navigation>Core::FAQ::RelatedArticles</Navigation>
+        <Value>
+            <Item ValueType="Checkbox">1</Item>
+        </Value>
+    </Setting>
+<!-- eo FAQ Service -->
     <Setting Name="Frontend::Output::FilterElementPost###OutputFilterPostFAQCustomerRelatedArticles" Required="0" Valid="1">
         <Description Translatable="1">Output filter to add Java-script to CustomerTicketMessage screen.</Description>
         <Navigation>Frontend::Base::OutputFilter</Navigation>
