@@ -690,135 +690,16 @@
         </TableCreate>
     </DatabaseInstall>
     <DatabaseUpgrade Type="post">
-        <TableCreate Type="post" Name="faq_category_group" Version="1.1.3">
+        <TableCreate Type="post" Name="faq_service" Version="10.0.3">
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="INTEGER"></Column>
-            <Column Name="category_id" Required="true" Size="200" Type="INTEGER"></Column>
-            <Column Name="group_id" Required="true" Type="INTEGER"></Column>
-            <Column Name="created" Required="false" Type="DATE"></Column>
-            <Column Name="created_by" Required="false" Type="INTEGER"></Column>
-            <Column Name="changed" Required="false" Type="DATE"></Column>
-            <Column Name="changed_by" Required="false" Type="INTEGER"></Column>
-        </TableCreate>
-        <TableCreate Type="post" Name="faq_log" Version="1.5.1">
-            <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="BIGINT"></Column>
+            <Column Name="name" Required="true" Size="200" Type="VARCHAR"></Column>
+            <Column Name="service_id" Required="true" Type="INTEGER"></Column>
             <Column Name="item_id" Required="true" Type="INTEGER"></Column>
-            <Column Name="interface" Required="true" Size="80" Type="VARCHAR"></Column>
-            <Column Name="ip" Required="false" Size="200" Type="VARCHAR"></Column>
-            <Column Name="user_agent" Required="false" Size="200" Type="VARCHAR"></Column>
-            <Column Name="created" Required="true" Type="DATE"></Column>
-            <Index Name="item_id">
-                <IndexColumn Name="item_id">
+            <Index Name="faq_service_id">
+                <IndexColumn Name="service_id">
                 </IndexColumn>
             </Index>
         </TableCreate>
-        <TableAlter Type="post" Name="faq_item" Version="1.5.1">
-            <ColumnAdd Default="1" Name="approved" Required="true" Type="SMALLINT"></ColumnAdd>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_attachment" Version="1.5.1">
-            <ColumnAdd Default="0" Name="inlineattachment" Required="true" Type="SMALLINT"></ColumnAdd>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_item" Version="1.6.91">
-            <ColumnDrop Name="free_key1"></ColumnDrop>
-            <ColumnDrop Name="free_value1"></ColumnDrop>
-            <ColumnDrop Name="free_key2"></ColumnDrop>
-            <ColumnDrop Name="free_value2"></ColumnDrop>
-            <ColumnDrop Name="free_key3"></ColumnDrop>
-            <ColumnDrop Name="free_value3"></ColumnDrop>
-            <ColumnDrop Name="free_key4"></ColumnDrop>
-            <ColumnDrop Name="free_value4"></ColumnDrop>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_state" Version="2.1.92">
-            <IndexCreate Name="faq_state_type_id">
-                <IndexColumn Name="type_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_category" Version="2.1.92">
-            <IndexCreate Name="faq_category_parent_id">
-                <IndexColumn Name="parent_id">
-                </IndexColumn>
-            </IndexCreate>
-            <IndexCreate Name="faq_category_name">
-                <IndexColumn Name="name">
-                </IndexColumn>
-            </IndexCreate>
-            <IndexCreate Name="faq_category_valid_id">
-                <IndexColumn Name="valid_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_category_group" Version="2.1.92">
-            <IndexCreate Name="faq_category_group_category_id">
-                <IndexColumn Name="category_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_item" Version="2.1.92">
-            <IndexCreate Name="faq_item_state_id">
-                <IndexColumn Name="state_id">
-                </IndexColumn>
-            </IndexCreate>
-            <IndexCreate Name="faq_item_category_id">
-                <IndexColumn Name="category_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_history" Version="2.1.92">
-            <IndexCreate Name="faq_history_item_id">
-                <IndexColumn Name="item_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_attachment" Version="2.1.92">
-            <IndexDrop Name="faq_id">
-            </IndexDrop>
-            <IndexCreate Name="faq_attachment_faq_id">
-                <IndexColumn Name="faq_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_voting" Version="2.1.92">
-            <IndexCreate Name="faq_voting">
-                <IndexColumn Name="item_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_log" Version="2.1.92">
-            <IndexDrop Name="item_id">
-            </IndexDrop>
-            <IndexCreate Name="faq_log_item_id">
-                <IndexColumn Name="item_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_category" Version="2.1.93">
-            <ForeignKeyCreate ForeignTable="valid">
-                <Reference Foreign="id" Local="valid_id">
-                </Reference>
-            </ForeignKeyCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_item" Version="2.1.93">
-            <ColumnAdd Default="1" Name="valid_id" Required="true" Type="SMALLINT"></ColumnAdd>
-            <IndexCreate Name="faq_item_valid_id">
-                <IndexColumn Name="valid_id">
-                </IndexColumn>
-            </IndexCreate>
-            <ForeignKeyCreate ForeignTable="valid">
-                <Reference Foreign="id" Local="valid_id">
-                </Reference>
-            </ForeignKeyCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_voting" Version="3.3.90">
-            <IndexDrop Name="faq_voting">
-            </IndexDrop>
-            <IndexCreate Name="faq_voting_item_id">
-                <IndexColumn Name="item_id">
-                </IndexColumn>
-            </IndexCreate>
-        </TableAlter>
-        <TableAlter Type="post" Name="faq_item" Version="4.0.91">
-            <ColumnAdd Default="text/html" Name="content_type" Required="true" Size="250" Type="VARCHAR"></ColumnAdd>
-        </TableAlter>
     </DatabaseUpgrade>
     <DatabaseUninstall Type="pre">
         <TableDrop Type="pre" Name="faq_history">
