@@ -834,42 +834,6 @@ sub _MaskNew {
         Class         => 'Modernize',
     );
 
-    if ( $ConfigObject->Get('FAQ::Service') ) {
-        # get all services
-        my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
-            KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
-            Valid        => 1,
-            UserID       => 1,
-        );
-
-        # get param object
-        my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-
-        my @ServiceIDs;
-        if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
-            @ServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
-        }
-
-        # Build the state selection.
-        my $ServiceHTML = $LayoutObject->BuildSelection(
-            Data        => \%ServiceList,
-            Name        => 'ServiceID',
-            Class       => 'Modernize',
-            Multiple    => 1,
-            Size        => 10,
-            SelectedID  => \@ServiceIDs,
-            Sort        => 'AlphanumericValue',
-            Translation => 0,
-            TreeView    => 1,
-        );
-        $LayoutObject->Block(
-            Name => 'Service',
-            Data => {
-                ServiceOption => $ServiceHTML,
-            },
-        );
-    }
-
     # Get screen type.
     my $ScreenType = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ScreenType' ) || '';
 
@@ -898,6 +862,40 @@ sub _MaskNew {
             FieldsetClass => $FieldsetClass,
         },
     );
+
+    # show services
+    if ( $ConfigObject->Get('FAQ::Service') ) {
+        # get all services
+        my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
+            KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,
+            Valid        => 1,
+            UserID       => 1,
+        );
+
+        # get param object
+        my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+        my @ServiceIDs = $Param{ServiceList} ? keys %{ $Param{ServiceList} } : ();
+
+        # Build the state selection.
+        my $ServiceHTML = $LayoutObject->BuildSelection(
+            Data        => \%ServiceList,
+            Name        => 'ServiceID',
+            Class       => 'Modernize',
+            Multiple    => 1,
+            Size        => 10,
+            SelectedID  => \@ServiceIDs,
+            Sort        => 'AlphanumericValue',
+            Translation => 0,
+            TreeView    => 1,
+        );
+        $LayoutObject->Block(
+            Name => 'Service',
+            Data => {
+                ServiceOption => $ServiceHTML,
+            },
+        );
+    }
 
     # Show languages field.
     my $MultiLanguage = $ConfigObject->Get('FAQ::MultiLanguage');

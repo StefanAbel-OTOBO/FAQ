@@ -528,6 +528,28 @@ sub _MaskNew {
         Class         => 'Modernize',
     );
 
+    # Show attachments.
+    ATTACHMENT:
+    my @AttachmentList;
+    for my $Attachment ( @{ $Param{Attachments} } ) {
+
+        # Do not show inline images as attachments (they have a ContentID).
+        if ( $Attachment->{ContentID} && $LayoutObject->{BrowserRichText} ) {
+            next ATTACHMENT;
+        }
+
+        push @{ $Param{AttachmentList} }, $Attachment;
+    }
+
+    $LayoutObject->Block(
+        Name => 'FAQAdd',
+        Data => {
+            %Param,
+            %Data,
+        },
+    );
+
+    # show services
     if ( $ConfigObject->Get('FAQ::Service') ) {
         # get all services
         my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
@@ -563,27 +585,6 @@ sub _MaskNew {
             },
         );
     }
-
-    # Show attachments.
-    ATTACHMENT:
-    my @AttachmentList;
-    for my $Attachment ( @{ $Param{Attachments} } ) {
-
-        # Do not show inline images as attachments (they have a ContentID).
-        if ( $Attachment->{ContentID} && $LayoutObject->{BrowserRichText} ) {
-            next ATTACHMENT;
-        }
-
-        push @{ $Param{AttachmentList} }, $Attachment;
-    }
-
-    $LayoutObject->Block(
-        Name => 'FAQAdd',
-        Data => {
-            %Param,
-            %Data,
-        },
-    );
 
     # Show languages field.
     my $MultiLanguage = $ConfigObject->Get('FAQ::MultiLanguage');
