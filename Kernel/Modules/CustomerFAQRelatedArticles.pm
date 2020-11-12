@@ -41,7 +41,6 @@ sub Run {
     my $Subject   = $ParamObject->GetParam( Param => 'Subject' );
     my $Body      = $ParamObject->GetParam( Param => 'Body' );
     my $ServiceID = $ParamObject->GetParam( Param => 'ServiceID' );
-    my %ServiceID = $ServiceID ? ( ServiceID => $ServiceID ) : ();
 
     my @RelatedFAQArticleList;
     my $RelatedFAQArticleFoundNothing;
@@ -53,6 +52,7 @@ sub Run {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $FAQServicesEnabled = $ConfigObject->Get('FAQ::Service');
     my $ShowOnServiceOnly  = $ConfigObject->Get('FAQ::Customer::RelatedArticlesOnServiceOnly');
+    my %ServiceID = $FAQServicesEnabled ? ( ServiceID => $ServiceID ) : ();
 
     if ( $FAQServicesEnabled && !$ServiceID ) {
         $RelatedFAQArticleFoundNothing = 1;
