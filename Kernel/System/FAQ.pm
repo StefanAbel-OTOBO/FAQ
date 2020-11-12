@@ -698,7 +698,6 @@ sub FAQAdd {
                 ServiceID => $ServiceID,
                 Name      => $Param{ServiceList}->{$ServiceID},
             );
-#print STDERR 'FAQServiceAdd failed: ',$ServiceID,"\n" unless $AddSuccess;
         }
     }
 
@@ -1559,14 +1558,6 @@ sub FAQServiceGet {
 
     return \@Data;
 
-=pod
-    my %ServiceList;
-    while ( my @Row = $DBObject->FetchrowArray() ) {
-        $ServiceList{$Row[1]} = $Row[0];
-    }
-
-    return \%ServiceList;
-=cut
 }
 
 =head2 FAQServiceArticlesGet()
