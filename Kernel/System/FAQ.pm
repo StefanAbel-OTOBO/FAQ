@@ -1569,6 +1569,63 @@ sub FAQServiceGet {
 =cut
 }
 
+=head2 FAQServiceArticlesGet()
+
+get an array with articles related to a service
+
+    my $FAQServiceArticles = $FAQObject->FAQServiceArticlesGet(
+        ServiceID => 1,
+        Limit     => 10,    # default 10
+    );
+
+Returns:
+
+    $FAQServiceArticles = [ 1, 2, 3 ];
+
+
+=cut
+
+sub FAQServiceArticlesGet {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ServiceID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    my $Limit = 10;
+    if ( $Param{Limit} ) {
+        $Limit = $Param{Limit};
+    }
+
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    return if !$DBObject->Prepare(
+        SQL => '
+            SELECT service_id, item_id
+            FROM faq_service
+            WHERE service_id = ?
+            ORDER BY item_id',
+        Bind => [ \$Param{ServiceID} ],
+        Limit => $Limit,
+    );
+
+    my @Data;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        push @Data, $Row[0];
+    }
+
+    return \@Data;
+
+}
+
+
 =head2 FAQServiceDelete()
 
 delete the service of an article
