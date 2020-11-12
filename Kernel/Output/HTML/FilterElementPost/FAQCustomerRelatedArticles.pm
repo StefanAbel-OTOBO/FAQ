@@ -125,17 +125,17 @@ sub Run {
             $QueuesEnabledStrg = "'$QueuesEnabledStrg'";
         }
     }
+
 # FAQ Service
-# TODO read the Config ???
-	my $ServicesEnabledStrg = 'Computer';
-	$ServicesEnabledStrg = "'$ServicesEnabledStrg'";
+    my $ShowOnServiceOnly = $ConfigObject->Get('FAQ::Customer::RelatedArticlesServiceShow::Enabled');
+    my $ShowOnServiceOnlyStrg = "'$ShowOnServiceOnly'";
 # eo FAQ Service
 
     # TODO the JS should be moved in a own JS file with OTOBO 10!
     # inject the necessary JS into the template
     $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
 var QueuesEnabled = [ $QueuesEnabledStrg ],
-ServicesEnabled = [ $ServicesEnabledStrg ],
+ServiceOnlyEnabled = $ShowOnServiceOnlyStrg,
 LastData;
 
 Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
@@ -147,7 +147,7 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
     // if ( \$('#FAQRelatedArticles').hasClass('Hidden') && (!QueuesEnabled.length || !SelectedQueueName || \$.inArray(SelectedQueueName, QueuesEnabled) > -1) ) {
     if ( (!QueuesEnabled.length || !SelectedQueueName || \$.inArray(SelectedQueueName, QueuesEnabled) > -1) ) {
 
-		if ( \$('#FAQRelatedArticles').hasClass('Hidden') ) { // XXX handle class
+        if ( \$('#FAQRelatedArticles').hasClass('Hidden') ) { // XXX handle class
             \$('#FAQRelatedArticles').removeClass('Hidden');
         }
 
@@ -161,23 +161,14 @@ Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady', function() {
 });
 
 // FAQ Service
-/* // TODO: Is it necessary at all?
-\$('#ServiceID').on('change.RelatedFAQArticle', function () {
-    var SelectedServiceID = \$(this).val(),
-        SelectedServiceIDName = SelectedServiceID.replace(/\\d*\\|\\|-?/, '');
+\$('#ServiceID').on('change', function (Event) {
+    var Value = \$('#ServiceID').val();
 
-    if ( \$('#FAQRelatedArticles').hasClass('Hidden') && (!ServicesEnabled.length || !SelectedServiceIDName || \$.inArray(SelectedServiceIDName, ServicesEnabled) > -1) ) {
-        \$('#FAQRelatedArticles').removeClass('Hidden');
-
-        if (\$('#Subject').val() || CKEDITOR.instances['RichText'].getData()) {
-            \$('#Subject').trigger('change');
-        }
-    }
-    else if ( !SelectedServiceIDName || ( ServicesEnabled.length && \$.inArray(SelectedServiceIDName, ServicesEnabled) == -1 ) ) {
-        \$('#FAQRelatedArticles').addClass('Hidden');
+    // trigger only the change event for the subject, if ServiceOnlyEnabled
+    if ( Value.length > 0 && ServiceOnlyEnabled > 0 ) {
+        \$('#Subject').trigger('change');
     }
 });
-*/
 // eo FAQ Service
 
 \$('#Subject').on('change', function (Event) {
