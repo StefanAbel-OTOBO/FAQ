@@ -41,15 +41,20 @@ sub Run {
     my $Subject = $ParamObject->GetParam( Param => 'Subject' );
     my $Body    = $ParamObject->GetParam( Param => 'Body' );
 # FAQ Services
-	my $ServiceID = $ParamObject->GetParam( Param => 'ServiceID' );
+    my $ServiceID = $ParamObject->GetParam( Param => 'ServiceID' );
 # eo FAQ Services
     my @RelatedFAQArticleList;
     my $RelatedFAQArticleFoundNothing;
 
     my $Config       = $Kernel::OM->Get('Kernel::Config')->Get("FAQ::Frontend::$Self->{Action}");
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+# FAQ Services
+    # get FAQs by service only, if FAQ::Customer::RelatedArticlesServiceShow::Enabled
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ShowOnServiceOnly = $ConfigObject->Get('FAQ::Customer::RelatedArticlesServiceShow::Enabled');
 
     if ( $Subject || $Body ) {
+# eo FAQ Services
         # Get the language from the user and add the default languages from the config.
         my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
 
@@ -74,6 +79,30 @@ sub Run {
             $RelatedFAQArticleFoundNothing = 1;
         }
     }
+# FAQ Services
+    elsif ( $ShowOnServiceOnly && $ServiceID ) {
+
+        # Get the language from the user and add the default languages from the config.
+        my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
+
+        # Check if the user language already exists.
+        my %LookupRelatedFAQArticlesLanguage = map { $_ => 1 } @{$RelatedArticleLanguages};
+        if ( !$LookupRelatedFAQArticlesLanguage{ $LayoutObject->{UserLanguage} } ) {
+            push @{$RelatedArticleLanguages}, $LayoutObject->{UserLanguage};
+        }
+
+        @RelatedFAQArticleList = $Kernel::OM->Get('Kernel::System::FAQ')->RelatedCustomerServiceArticleList(
+            ServiceID => $ServiceID,
+            Languages => $RelatedArticleLanguages,
+            Limit     => $Config->{ShowLimit} || 10,
+            UserID    => $Self->{UserID},
+        );
+
+        if ( !@RelatedFAQArticleList ) {
+            $RelatedFAQArticleFoundNothing = 1;
+        }
+    }
+# eo FAQ Services
 
     # Generate the html for the widget.
     my $CustomerRelatedFAQArticlesHTMLString = $LayoutObject->Output(
