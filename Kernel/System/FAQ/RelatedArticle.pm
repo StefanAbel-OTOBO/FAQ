@@ -115,6 +115,79 @@ sub RelatedCustomerArticleList {
     );
 }
 
+# FAQ Service
+=head2 RelatedCustomerServiceArticleList()
+
+Get the service related faq article list for the given subject and body.
+
+    my @RelatedCustomerArticleList = $FAQObject->RelatedCustomerServiceArticleList(
+        Languages =>[ 'en' ],         # optional # TODO
+        Limit     => 10,              # optional
+        UserID    => 1,
+        ServiceID => 1,
+    );
+
+Returns
+
+    my @RelatedCustomerServiceArticleList = (
+        {
+            ItemID       => 123,
+            Title        => 'FAQ Title',
+            CategoryName => 'Misc',
+            Created      => '2014-10-10 10:10:00',
+        },
+        {
+            ItemID       => 123,
+            Title        => 'FAQ Title',
+            CategoryName => 'Misc',
+            Created      => '2014-10-10 10:10:00',
+        },
+    );
+
+=cut
+
+sub RelatedCustomerServiceArticleList {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(UserID ServiceID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    my $FAQServiceArticles = $Self->FAQServiceArticlesGet(
+        ServiceID => $Param{ServiceID},
+        Limit     => $Param{Limit},
+    );
+
+    my %LookupRelatedFAQArticles;
+
+    for my $FAQArticleID ( @{$FAQServiceArticles} ) {
+
+        my %FAQArticleData = $Self->FAQGet(
+            ItemID => $FAQArticleID,
+            UserID => $Param{UserID},
+        );
+        # $FAQArticleData{Votes}
+        $LookupRelatedFAQArticles{$FAQArticleID} = {
+            %FAQArticleData,
+        };
+
+    }
+
+    # To save the related faq article from the lookup hash.
+    my @RelatedFAQArticleList = map { $LookupRelatedFAQArticles{$_} } sort keys %LookupRelatedFAQArticles;
+
+    return @RelatedFAQArticleList;
+}
+
+# eo FAQ Service
+
 =head1 PRIVATE FUNCTIONS
 
 =head2 _RelatedArticleList()
@@ -197,7 +270,7 @@ sub _RelatedArticleList {
         Limit              => $Param{Limit},
         UserID             => $Param{UserID},
 # FAQ Service
-	    ServiceID          => $Param{ServiceID}, # TODO necessary
+        ServiceID          => $Param{ServiceID}, # TODO necessary
 # eo FAQ Service
     );
 }
