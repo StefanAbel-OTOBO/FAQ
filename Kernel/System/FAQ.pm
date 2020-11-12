@@ -2077,6 +2077,9 @@ sub FAQKeywordArticleList {
     }
     $CacheKey .= '::CategoryIDs' . join '::', sort @{$CategoryIDs};
     $CacheKey .= '::Interface::' . $Interface;
+    if ( exists $Param{ServiceID} && $Param{ServiceID} ) {
+        $CacheKey .= $Param{ServiceID};
+    }
 
     my $Cache = $Kernel::OM->Get('Kernel::System::Cache')->Get(
         Type => 'FAQKeywordArticleList',
