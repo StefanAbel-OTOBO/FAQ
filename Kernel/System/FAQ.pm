@@ -1599,7 +1599,7 @@ sub FAQServiceArticlesGet {
 
     return if !$DBObject->Prepare(
         SQL => '
-            SELECT service_id, item_id
+            SELECT item_id
             FROM faq_service
             WHERE service_id = ?
             ORDER BY item_id',
