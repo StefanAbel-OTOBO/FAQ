@@ -57,6 +57,28 @@ sub Run {
     if ( $FAQServicesEnabled && !$ServiceID ) {
         $RelatedFAQArticleFoundNothing = 1;
     }
+    elsif ( $FAQServicesEnabled && $ShowOnServiceOnly && $ServiceID ) {
+
+        # Get the language from the user and add the default languages from the config.
+        my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
+
+        # Check if the user language already exists.
+        my %LookupRelatedFAQArticlesLanguage = map { $_ => 1 } @{$RelatedArticleLanguages};
+        if ( !$LookupRelatedFAQArticlesLanguage{ $LayoutObject->{UserLanguage} } ) {
+            push @{$RelatedArticleLanguages}, $LayoutObject->{UserLanguage};
+        }
+
+        @RelatedFAQArticleList = $Kernel::OM->Get('Kernel::System::FAQ')->RelatedCustomerServiceArticleList(
+            %ServiceID,
+            Languages => $RelatedArticleLanguages,
+            Limit     => $Config->{ShowLimit} || 10,
+            UserID    => $Self->{UserID},
+        );
+
+        if ( !@RelatedFAQArticleList ) {
+            $RelatedFAQArticleFoundNothing = 1;
+        }
+    }
     elsif ( $Subject || $Body ) {
         # Get the language from the user and add the default languages from the config.
         my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
@@ -80,29 +102,6 @@ sub Run {
             $RelatedFAQArticleFoundNothing = 1;
         }
     }
-    elsif ( $FAQServicesEnabled && $ShowOnServiceOnly && $ServiceID ) {
-
-        # Get the language from the user and add the default languages from the config.
-        my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
-
-        # Check if the user language already exists.
-        my %LookupRelatedFAQArticlesLanguage = map { $_ => 1 } @{$RelatedArticleLanguages};
-        if ( !$LookupRelatedFAQArticlesLanguage{ $LayoutObject->{UserLanguage} } ) {
-            push @{$RelatedArticleLanguages}, $LayoutObject->{UserLanguage};
-        }
-
-        @RelatedFAQArticleList = $Kernel::OM->Get('Kernel::System::FAQ')->RelatedCustomerServiceArticleList(
-            %ServiceID,
-            Languages => $RelatedArticleLanguages,
-            Limit     => $Config->{ShowLimit} || 10,
-            UserID    => $Self->{UserID},
-        );
-
-        if ( !@RelatedFAQArticleList ) {
-            $RelatedFAQArticleFoundNothing = 1;
-        }
-    }
-# eo FAQ Services
 
     # Generate the html for the widget.
     my $CustomerRelatedFAQArticlesHTMLString = $LayoutObject->Output(
