@@ -59,6 +59,8 @@ FAQ.Customer.FAQZoom = (function (TargetNS) {
             // add delta for scrollbar
             if (NewHeight > 0) {
                 NewHeight = parseInt(NewHeight, 10) + 25;
+                $Iframe.contents().find('html').css({overflow:'hidden'});
+                $Iframe.contents().find('body').css({overflow:'auto'});
             }
             $Iframe.height(NewHeight + 'px');
         }
