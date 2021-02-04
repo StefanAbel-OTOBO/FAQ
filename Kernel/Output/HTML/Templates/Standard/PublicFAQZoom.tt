@@ -107,8 +107,8 @@
 # the following JS code must be within the template, otherwise it could happen, that also this code itself is not loaded yet
 <script>
 function CheckIFrameHeight(IFrameID) {
-    if (typeof FAQ === 'object' && typeof FAQ.Public === 'object' && typeof FAQ.Public.FAQZoom === 'object') {
-        FAQ.Public.FAQZoom.IframeAutoHeight($('#' + IFrameID));
+    if (typeof FAQ === 'object' && typeof FAQ.Customer === 'object' && typeof FAQ.Customer.FAQZoom === 'object') {
+        FAQ.Customer.FAQZoom.IframeAutoHeight($('#' + IFrameID));
     }
     else {
         window.setTimeout(function () {
