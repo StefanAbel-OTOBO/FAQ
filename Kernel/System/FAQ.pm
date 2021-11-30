@@ -16,6 +16,8 @@
 
 package Kernel::System::FAQ;
 
+## nofilter(TidyAll::Plugin::OTOBO::Perl::ParamObject)
+
 use strict;
 use warnings;
 
@@ -2252,8 +2254,9 @@ sub FAQLogAdd {
     }
 
     # get environment variables
-    my $IP        = $ENV{'REMOTE_ADDR'}     || 'NONE';
-    my $UserAgent = $ENV{'HTTP_USER_AGENT'} || 'NONE';
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $IP          = $ParamObject->RemoteAddr()       || 'NONE';
+    my $UserAgent   = $ParamObject->HTTP('USER_AGENT') || 'NONE';
 
     # Define time period when reloads will not be logged (10 minutes).
     my $ReloadBlockTime = 10 * 60;

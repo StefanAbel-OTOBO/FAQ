@@ -273,7 +273,7 @@ sub Run {
             CreateBy  => $Self->{UserID},
             ItemID    => $FAQData{ItemID},
             Interface => $Interface->{StateID},
-            IP        => $ENV{'REMOTE_ADDR'},
+            IP        => $ParamObject->RemoteAddr(),
             UserID    => $Self->{UserID},
         );
     }
@@ -343,7 +343,7 @@ sub Run {
                 $FAQObject->VoteAdd(
                     CreatedBy => $Self->{UserID},
                     ItemID    => $GetParam{ItemID},
-                    IP        => $ENV{'REMOTE_ADDR'},
+                    IP        => $ParamObject->RemoteAddr(),
                     Interface => $Interface->{StateID},
                     Rate      => $GetParam{Rate},
                     UserID    => $Self->{UserID},

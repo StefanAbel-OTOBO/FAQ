@@ -34,7 +34,8 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $Redirect = $ENV{REQUEST_URI};
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $Redirect    = $ParamObject->RequestURI();
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -44,7 +45,7 @@ sub Run {
     else {
         $Redirect = $LayoutObject->{Baselink}
             . 'Action=PublicFAQZoom;ItemID='
-            . $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ItemID' );
+            . $ParamObject->GetParam( Param => 'ItemID' );
     }
 
     return $LayoutObject->Redirect(
