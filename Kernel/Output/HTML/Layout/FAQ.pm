@@ -342,15 +342,7 @@ sub FAQListShow {
     );
 
     # create output
-    my $OutputRaw = '';
-    if ( !$Param{Output} ) {
-        $Self->Print(
-            Output => \$OutputNavBar,
-        );
-    }
-    else {
-        $OutputRaw = $OutputNavBar;
-    }
+    my $OutputRaw = $OutputNavBar;
 
     # load module
     if ( !$Kernel::OM->Get('Kernel::System::Main')->Require( $Backends->{$View}->{Module} ) ) {
@@ -374,14 +366,7 @@ sub FAQListShow {
     );
 
     # create output
-    if ( !$Param{Output} ) {
-        $Self->Print(
-            Output => \$Output,
-        );
-    }
-    else {
-        $OutputRaw .= $Output;
-    }
+    $OutputRaw .= $Output;
 
     # create overview navigation bar
     $Self->Block(

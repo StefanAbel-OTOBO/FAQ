@@ -983,10 +983,6 @@ sub Run {
             # Start HTML page.
             my $Output = $LayoutObject->Header();
             $Output .= $LayoutObject->NavigationBar();
-            $LayoutObject->Print(
-                Output => \$Output,
-            );
-            $Output = '';
 
             my $Filter = $ParamObject->GetParam( Param => 'Filter' ) || '';
             my $View   = $ParamObject->GetParam( Param => 'View' )   || '';

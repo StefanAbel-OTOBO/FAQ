@@ -578,10 +578,6 @@ sub Run {
         my $Output = $LayoutObject->Header(
             Type => 'Small',
         );
-        $LayoutObject->Print(
-            Output => \$Output,
-        );
-        $Output = '';
 
         my $Filter = $ParamObject->GetParam( Param => 'Filter' ) || '';
         my $View   = $ParamObject->GetParam( Param => 'View' )   || '';
