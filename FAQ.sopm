@@ -303,8 +303,6 @@
         $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeReinstall();
     </CodeReinstall>
     <Filelist>
-        <File Location="bin/cgi-bin/faq.pl" Permission="644" />
-        <File Location="bin/fcgi-bin/faq.fpl" Permission="644" />
         <File Location="doc/faq-database.png" Permission="644" />
         <File Location="Kernel/Config/Files/XML/FAQ.xml" Permission="644" />
         <File Location="Kernel/cpan-lib/XML/RSS/SimpleGen.pm" Permission="644" />
