@@ -1,0 +1,8 @@
+# Editor swap files
+*.swn
+*.swp
+*.swo
+*~
+
+# TidyAll used for the hook .git/hooks/pre-commit
+TidyAll
