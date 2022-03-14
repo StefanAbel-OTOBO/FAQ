@@ -248,7 +248,7 @@ sub Run {
 
     # use given category, or limit to the categories that are available for the customer
     if ( $CategoryID > 0 ) {
-        $FAQSearch{CategoryIDs} = [$CategoryID],
+        $FAQSearch{CategoryIDs} = [$CategoryID];
     }
 
     # get the latest articles for the root category (else empty)
