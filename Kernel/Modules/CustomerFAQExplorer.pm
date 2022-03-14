@@ -250,13 +250,7 @@ sub Run {
     if ( $CategoryID > 0 ) {
         $FAQSearch{CategoryIDs} = [$CategoryID];
     }
-
-    # get the latest articles for the root category (else empty)
-    elsif ( !%Search ) {
-        $SortBy = 'Changed';
-        $OrderBy = 'Down';
-        $SearchLimit = 10;
-
+    else {
         # Need GetSubCategories => 1, so cannot use $CategoryIDsRef
         $FAQSearch{CategoryIDs} = $FAQObject->CustomerCategorySearch(
             CustomerUser     => $Self->{UserLogin},
@@ -266,14 +260,11 @@ sub Run {
         );
     }
 
-    # search mode
-    else {
-        $FAQSearch{CategoryIDs} = $FAQObject->CustomerCategorySearch(
-            CustomerUser  => $Self->{UserLogin},
-            GetSubCategories => 1,
-            Mode          => 'Customer',
-            UserID        => $Self->{UserID},
-        );
+    # get the latest articles for the root category (else empty)
+    if ( $CategoryID <= 0 && !%Search ) {
+        $SortBy      = 'Changed';
+        $OrderBy     = 'Down';
+        $SearchLimit = 10;
     }
 
     # search all FAQ articles within the given category
