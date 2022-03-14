@@ -265,24 +265,6 @@ sub Run {
         $SortBy      = 'Changed';
         $OrderBy     = 'Down';
         $SearchLimit = 10;
-
-        # Need GetSubCategories => 1, so cannot use $CategoryIDsRef
-        $FAQSearch{CategoryIDs} = $FAQObject->CustomerCategorySearch(
-            CustomerUser  => $Self->{UserLogin},
-            GetSubCategories => 1,
-            Mode          => 'Customer',
-            UserID        => $Self->{UserID},
-        );
-    }
-
-    # search mode
-    else {
-        $FAQSearch{CategoryIDs} = $FAQObject->CustomerCategorySearch(
-            CustomerUser  => $Self->{UserLogin},
-            GetSubCategories => 1,
-            Mode          => 'Customer',
-            UserID        => $Self->{UserID},
-        );
     }
 
     # search all FAQ articles within the given category
