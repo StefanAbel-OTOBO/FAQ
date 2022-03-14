@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -16,8 +16,15 @@
 
 package Kernel::Modules::CustomerFAQExplorer;
 
+use v5.24;
 use strict;
 use warnings;
+
+# core modules
+
+# CPAN modules
+
+# OTOBO modules
 use Kernel::Language qw(Translatable);
 
 our $ObjectManagerDisabled = 1;
@@ -26,10 +33,7 @@ sub new {
     my ( $Type, %Param ) = @_;
 
     # allocate new hash for object
-    my $Self = {%Param};
-    bless( $Self, $Type );
-
-    return $Self;
+    return bless {%Param}, $Type;
 }
 
 sub Run {
@@ -44,7 +48,7 @@ sub Run {
 
     # get config data
     my $StartHit        = int( $ParamObject->GetParam( Param => 'StartHit' ) || 1 );
-    my $SearchLimit     = $Config->{SearchLimit} || 200;
+    my $SearchLimit     = $Config->{SearchLimit}     || 200;
     my $SearchPageShown = $Config->{SearchPageShown} || 3;
     my $SortBy          = $ParamObject->GetParam( Param => 'SortBy' )
         || $Config->{'SortBy::Default'}
@@ -121,7 +125,7 @@ sub Run {
     );
 
     # AddJSData for ES
-    my $ESActive = $ConfigObject->Get( 'Elasticsearch::Active' );
+    my $ESActive = $ConfigObject->Get('Elasticsearch::Active');
 
     $LayoutObject->AddJSData(
         Key   => 'ESActive',
@@ -136,14 +140,14 @@ sub Run {
 
     # show search results
     if ( $Self->{Subaction} && $Self->{Subaction} eq 'Search' ) {
-        my $SearchName = Translatable("Search").":";
-        for my $Mode ( qw/Keyword What/ ) {
+        my $SearchName = Translatable("Search") . ":";
+        for my $Mode (qw/Keyword What/) {
             my $String = $ParamObject->GetParam( Param => $Mode );
-            if ( $String ) {
-                $Search{ $Mode } = $String;
-                $FAQSearch{ $Mode } = "*$String*";
+            if ($String) {
+                $Search{$Mode}    = $String;
+                $FAQSearch{$Mode} = "*$String*";
                 my $ModeName = $Mode eq 'What' ? 'Fulltext' : $Mode;
-                $SearchName .= " ".Translatable($ModeName)." \"$String\";";
+                $SearchName .= " " . Translatable($ModeName) . " \"$String\";";
             }
         }
 
@@ -155,11 +159,12 @@ sub Run {
                 CategoryID => 0,
             },
         );
+
         # output search information
         $LayoutObject->Block(
             Name => 'FAQPathCategoryElementNoLink',
             Data => {
-                Name       => $SearchName,
+                Name => $SearchName,
             },
         );
 
@@ -168,7 +173,7 @@ sub Run {
     }
 
     # no search ( standard mode )
-    else { 
+    else {
         # show FAQ path
         $LayoutObject->FAQPathShow(
             FAQObject  => $FAQObject,
@@ -241,15 +246,24 @@ sub Run {
         UserID => $Self->{UserID},
     );
 
-    # include Category if not in base Category (0), or search mode
+    # use given category, or limit to the categories that are available for the customer
     if ( $CategoryID > 0 ) {
-        $FAQSearch{CategoryIDs} = [$CategoryID],
+        $FAQSearch{CategoryIDs} = [$CategoryID];
+    }
+    else {
+        # Need GetSubCategories => 1, so cannot use $CategoryIDsRef
+        $FAQSearch{CategoryIDs} = $FAQObject->CustomerCategorySearch(
+            CustomerUser     => $Self->{UserLogin},
+            GetSubCategories => 1,
+            Mode             => 'Customer',
+            UserID           => $Self->{UserID},
+        );
     }
 
     # get the latest articles for the root category (else empty)
-    elsif ( !%Search ) {
-        $SortBy = 'Changed';
-        $OrderBy = 'Down';
+    if ( $CategoryID <= 0 && !%Search ) {
+        $SortBy      = 'Changed';
+        $OrderBy     = 'Down';
         $SearchLimit = 10;
     }
 
@@ -366,14 +380,14 @@ sub Run {
     $Link .= 'Order=' . $LayoutObject->LinkEncode($OrderBy) . ';';
 
     my $ActionString;
-    if ( %Search ) {
+    if (%Search) {
         $ActionString = "Action=CustomerFAQExplorer;Subaction=Search;";
-		if ( $FAQSearch{CategoryIDs} ) {
-			$ActionString .= "CategoryID=$CategoryID;";
-		}
-		for my $Mode ( keys %Search ) {
-			$ActionString .= "$Mode=$Search{ $Mode };";
-		}
+        if ( $FAQSearch{CategoryIDs} ) {
+            $ActionString .= "CategoryID=$CategoryID;";
+        }
+        for my $Mode ( keys %Search ) {
+            $ActionString .= "$Mode=$Search{ $Mode };";
+        }
     }
     else {
         $ActionString = "Action=CustomerFAQExplorer;CategoryID=$CategoryID";
