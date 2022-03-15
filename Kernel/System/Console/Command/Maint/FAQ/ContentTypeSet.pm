@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -30,7 +30,7 @@ sub Configure {
 
     $Self->Description('Sets the content type of FAQ items.');
     $Self->AddOption(
-        Name => 'faq-item-id',
+        Name        => 'faq-item-id',
         Description =>
             "specify one or more ids of faq items to set its content type (if not set, all FAQ items will be affected).",
         Required   => 0,

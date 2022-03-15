@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -169,10 +169,10 @@ sub Run {
 
     # Perform FAQ search.
     my @ViewableItemIDs = $FAQObject->FAQSearch(
-        Number  => $Param{Data}->{Number}  || '',
-        Title   => $Param{Data}->{Title}   || '',
-        What    => $Param{Data}->{What}    || '',
-        Keyword => $Param{Data}->{Keyword} || '',
+        Number           => $Param{Data}->{Number}  || '',
+        Title            => $Param{Data}->{Title}   || '',
+        What             => $Param{Data}->{What}    || '',
+        Keyword          => $Param{Data}->{Keyword} || '',
         LanguageIDs      => $LanguageIDs,
         CategoryIDs      => $CategoryIDs,
         OrderBy          => $SortBy,

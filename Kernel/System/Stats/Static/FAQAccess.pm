@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -63,7 +63,7 @@ sub Param {
     my $Y = sprintf( "%02d", $DateTimeSettings->{Year} );
 
     # Create possible time selections.
-    my %Year = map { $_ => $_ } ( $Y - 10 .. $Y + 1 );
+    my %Year  = map { $_ => $_ } ( $Y - 10 .. $Y + 1 );
     my %Month = map { sprintf( "%02d", $_ ) => sprintf( "%02d", $_ ) } ( 1 .. 12 );
     my %Day   = map { sprintf( "%02d", $_ ) => sprintf( "%02d", $_ ) } ( 1 .. 31 );
 
@@ -222,7 +222,7 @@ sub Run {
         my $VoteResult = sprintf(
             "%0."
                 . $ConfigObject->Get(
-                "FAQ::Explorer::ItemList::VotingResultDecimalPlaces"
+                    "FAQ::Explorer::ItemList::VotingResultDecimalPlaces"
                 )
                 . "f",
             $VoteData->{Result}

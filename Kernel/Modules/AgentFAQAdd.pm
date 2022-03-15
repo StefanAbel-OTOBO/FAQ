@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -139,11 +139,11 @@ sub Run {
             # Get field HTML.
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                 $DynamicFieldBackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-                Mandatory =>
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Mandatory          =>
                     $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                LayoutObject => $LayoutObject,
-                ParamObject  => $ParamObject,
+                    LayoutObject => $LayoutObject,
+                    ParamObject  => $ParamObject,
                 );
         }
 
@@ -221,8 +221,8 @@ sub Run {
             if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
                 @ServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
             }
-            $GetParam{ServiceID} 	= \@ServiceIDs;
-            $GetParam{ServiceList} 	= \%ServiceList;
+            $GetParam{ServiceID}   = \@ServiceIDs;
+            $GetParam{ServiceList} = \%ServiceList;
         }
 
         # Create HTML strings for all dynamic fields.
@@ -235,7 +235,7 @@ sub Run {
             my $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 ParamObject        => $ParamObject,
-                Mandatory =>
+                Mandatory          =>
                     $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
             );
 
@@ -257,13 +257,13 @@ sub Run {
             # Get field HTML.
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                 $DynamicFieldBackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-                Mandatory =>
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Mandatory          =>
                     $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                ServerError  => $ValidationResult->{ServerError}  || '',
-                ErrorMessage => $ValidationResult->{ErrorMessage} || '',
-                LayoutObject => $LayoutObject,
-                ParamObject  => $ParamObject,
+                    ServerError  => $ValidationResult->{ServerError}  || '',
+                    ErrorMessage => $ValidationResult->{ErrorMessage} || '',
+                    LayoutObject => $LayoutObject,
+                    ParamObject  => $ParamObject,
                 );
         }
 
@@ -288,7 +288,7 @@ sub Run {
                 if ( !$ApprovalQueueID ) {
                     $Output .= $LayoutObject->Notify(
                         Priority => 'Error',
-                        Info =>
+                        Info     =>
                             "FAQ Approval is enabled but queue '$ApprovalQueue' does not exists",
                         Link => $LayoutObject->{Baselink}
                             . 'Action=AdminSystemConfiguration;Subaction=ViewCustomGroup;Names=FAQ::ApprovalQueue',
@@ -530,7 +530,6 @@ sub _MaskNew {
 
     # Show attachments.
     ATTACHMENT:
-    my @AttachmentList;
     for my $Attachment ( @{ $Param{Attachments} } ) {
 
         # Do not show inline images as attachments (they have a ContentID).
@@ -551,6 +550,7 @@ sub _MaskNew {
 
     # show services
     if ( $ConfigObject->Get('FAQ::Service') ) {
+
         # get all services
         my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
             KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,

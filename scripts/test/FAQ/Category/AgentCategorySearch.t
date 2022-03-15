@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
-## no critic (Modules::RequireExplicitPackage)
 use strict;
 use warnings;
 
@@ -174,7 +173,7 @@ my @Tests = (
         },
         Success            => 1,
         ExpectedResults    => [ $CategoryID11, $CategoryID12, $CategoryID121 ],
-        NotExpectedResults => [ $CategoryID1, $CategoryID2, $CategoryID3 ],
+        NotExpectedResults => [ $CategoryID1,  $CategoryID2,  $CategoryID3 ],
     },
     {
         Name   => 'ParentID Category 2 W/Subs',
@@ -183,7 +182,7 @@ my @Tests = (
             GetSubCategories => 1,
             UserID           => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },
@@ -194,7 +193,7 @@ my @Tests = (
             GetSubCategories => 1,
             UserID           => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },
@@ -235,7 +234,7 @@ my @Tests = (
         },
         Success            => 1,
         ExpectedResults    => [ $CategoryID11, $CategoryID12, ],
-        NotExpectedResults => [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID121 ],
+        NotExpectedResults => [ $CategoryID1,  $CategoryID2, $CategoryID3, $CategoryID121 ],
     },
     {
         Name   => 'ParentID Category 2 WO/Subs',
@@ -243,7 +242,7 @@ my @Tests = (
             ParentID => $CategoryID2,
             UserID   => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },
@@ -253,7 +252,7 @@ my @Tests = (
             ParentID => $CategoryID11,
             UserID   => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },

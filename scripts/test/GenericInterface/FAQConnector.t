@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
-## no critic (Modules::RequireExplicitPackage)
 use strict;
 use warnings;
 use utf8;
@@ -555,7 +554,7 @@ my @Tests = (
         ExpectedReturnRemoteData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQGet.NotValidFAQID',
+                    ErrorCode    => 'PublicFAQGet.NotValidFAQID',
                     ErrorMessage =>
                         'PublicFAQGet: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQGet::Run()'
                 }
@@ -566,7 +565,7 @@ my @Tests = (
         ExpectedReturnLocalData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQGet.NotValidFAQID',
+                    ErrorCode    => 'PublicFAQGet.NotValidFAQID',
                     ErrorMessage =>
                         'PublicFAQGet: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQGet::Run()'
                 }
@@ -615,7 +614,7 @@ my @Tests = (
         ExpectedReturnRemoteData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }
@@ -625,7 +624,7 @@ my @Tests = (
         ExpectedReturnLocalData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }
@@ -643,7 +642,7 @@ my @Tests = (
         ExpectedReturnRemoteData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }
@@ -653,7 +652,7 @@ my @Tests = (
         ExpectedReturnLocalData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }

@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2020 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,6 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
-## no critic (Modules::RequireExplicitPackage)
 use strict;
 use warnings;
 
@@ -82,7 +81,7 @@ my @FAQItems = (
         CategoryID => 1,
         StateID    => $ReverseStateList{'external (customer)'},    # 'external'
         LanguageID => 1,                                           # 'en'
-        Keywords =>
+        Keywords   =>
             "ticket$RandomNumber keyword$RandomNumber itsm$RandomNumber example$RandomNumber $RandomNumber.$RandomNumber",
         Field1      => 'Problem...',
         Field2      => 'Solution...',
@@ -125,8 +124,8 @@ my @FAQItems = (
     {
         Title       => 'Some Text Internal',
         CategoryID  => 1,
-        StateID     => $ReverseStateList{'internal (agent)'},                                               # 'internal'
-        LanguageID  => 1,                                                                                   # 'en'
+        StateID     => $ReverseStateList{'internal (agent)'},                                                # 'internal'
+        LanguageID  => 1,                                                                                    # 'en'
         Keywords    => "ticket$RandomNumber KeyWord$RandomNumber iTsm$RandomNumber internal$RandomNumber",
         Field1      => 'Problem...',
         Field2      => 'Solution...',
@@ -136,8 +135,8 @@ my @FAQItems = (
     {
         Title       => 'Some Text Internal',
         CategoryID  => 1,
-        StateID     => $ReverseStateList{'internal (agent)'},                                               # 'internal'
-        LanguageID  => 2,                                                                                   # 'en'
+        StateID     => $ReverseStateList{'internal (agent)'},                                                # 'internal'
+        LanguageID  => 2,                                                                                    # 'en'
         Keywords    => "ticket$RandomNumber KeyWord$RandomNumber iTsm$RandomNumber internal$RandomNumber",
         Field1      => 'Problem...',
         Field2      => 'Solution...',
@@ -147,8 +146,8 @@ my @FAQItems = (
     {
         Title       => 'Some Text Internal',
         CategoryID  => 1,
-        StateID     => $ReverseStateList{'internal (agent)'},                                               # 'internal'
-        LanguageID  => 1,                                                                                   # 'en'
+        StateID     => $ReverseStateList{'internal (agent)'},                                                # 'internal'
+        LanguageID  => 1,                                                                                    # 'en'
         Keywords    => "faq$RandomNumber",
         Field1      => 'Problem...',
         Field2      => 'Solution...',
@@ -576,7 +575,7 @@ for my $Keyword ( sort keys %{ $Tests[-1]->{ReferenceData} } ) {
             'Test with some html keywords in the subject and body (with html and link) for RelatedCustomerArticleList',
         RelatedCustomerArticleList => {
             Subject => "itsm$RandomNumber",
-            Body =>
+            Body    =>
                 "$RandomNumber itsm$RandomNumber ticket$RandomNumber <br />keyword$RandomNumber ITSM$RandomNumber. [1] https://faq.com/",
             UserID => $CustomerUsers[0],
         },
@@ -617,7 +616,7 @@ for my $Keyword ( sort keys %{ $Tests[-1]->{ReferenceData} } ) {
     #   - FAQArticle 1 => 5
     #   - FAQArticle 2 => 4
     {
-        Description => 'Test with some keywords in the subject and body and a limit for RelatedCustomerArticleList',
+        Description                => 'Test with some keywords in the subject and body and a limit for RelatedCustomerArticleList',
         RelatedCustomerArticleList => {
             Subject => "itsm$RandomNumber",
             Body    => "itsm$RandomNumber; ticket$RandomNumber keyword$RandomNumber ITSM$RandomNumber.",
@@ -638,7 +637,7 @@ for my $Keyword ( sort keys %{ $Tests[-1]->{ReferenceData} } ) {
     #   - FAQArticle 1 => 2
     #   - FAQArticle 4 => 1
     {
-        Description => 'Test with some keywords in the subject and body and a limit for RelatedCustomerArticleList',
+        Description                => 'Test with some keywords in the subject and body and a limit for RelatedCustomerArticleList',
         RelatedCustomerArticleList => {
             Subject => "$RandomNumber",
             Body    => "$RandomNumber.$RandomNumber faq$RandomNumber $RandomNumber.$RandomNumber.",
@@ -708,7 +707,7 @@ for my $Keyword ( sort keys %{ $Tests[-1]->{ReferenceData} } ) {
             'Test with some html keywords in the subject and body (with html and link) for RelatedAgentArticleList',
         RelatedAgentArticleList => {
             Subject => "itsm$RandomNumber",
-            Body =>
+            Body    =>
                 "$RandomNumber itsm$RandomNumber ticket$RandomNumber <br />keyword$RandomNumber ITSM$RandomNumber. [1] https://faq.com/",
             UserID => $TestUserID,
         },
@@ -751,7 +750,7 @@ for my $Keyword ( sort keys %{ $Tests[-1]->{ReferenceData} } ) {
     #   - FAQArticle 1 => 5
     #   - FAQArticle 2 => 4
     {
-        Description => 'Test with some keywords in the subject and body and a limit for RelatedAgentArticleList',
+        Description             => 'Test with some keywords in the subject and body and a limit for RelatedAgentArticleList',
         RelatedAgentArticleList => {
             Subject => "itsm$RandomNumber",
             Body    => "itsm$RandomNumber; ticket$RandomNumber keyword$RandomNumber ITSM$RandomNumber.",
@@ -772,7 +771,7 @@ for my $Keyword ( sort keys %{ $Tests[-1]->{ReferenceData} } ) {
     #   - FAQArticle 1 => 2
     #   - FAQArticle 7 => 1
     {
-        Description => 'Test with some keywords in the subject and body and a limit for RelatedAgentArticleList',
+        Description             => 'Test with some keywords in the subject and body and a limit for RelatedAgentArticleList',
         RelatedAgentArticleList => {
             Subject => "$RandomNumber",
             Body    => "$RandomNumber.$RandomNumber faq$RandomNumber $RandomNumber.$RandomNumber.",
