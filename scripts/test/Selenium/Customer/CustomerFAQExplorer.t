@@ -291,7 +291,7 @@ $Selenium->RunTest(
         # Delete FAQs.
         push @Items,
             {
-            ItemID => $SubItemID,
+                ItemID => $SubItemID,
             };
         for my $FAQ (@Items) {
             my $Success = $FAQObject->FAQDelete(

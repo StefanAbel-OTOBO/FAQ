@@ -173,7 +173,7 @@ my @Tests = (
         },
         Success            => 1,
         ExpectedResults    => [ $CategoryID11, $CategoryID12, $CategoryID121 ],
-        NotExpectedResults => [ $CategoryID1, $CategoryID2, $CategoryID3 ],
+        NotExpectedResults => [ $CategoryID1,  $CategoryID2,  $CategoryID3 ],
     },
     {
         Name   => 'ParentID Category 2 W/Subs',
@@ -182,7 +182,7 @@ my @Tests = (
             GetSubCategories => 1,
             UserID           => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },
@@ -193,7 +193,7 @@ my @Tests = (
             GetSubCategories => 1,
             UserID           => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },
@@ -234,7 +234,7 @@ my @Tests = (
         },
         Success            => 1,
         ExpectedResults    => [ $CategoryID11, $CategoryID12, ],
-        NotExpectedResults => [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID121 ],
+        NotExpectedResults => [ $CategoryID1,  $CategoryID2, $CategoryID3, $CategoryID121 ],
     },
     {
         Name   => 'ParentID Category 2 WO/Subs',
@@ -242,7 +242,7 @@ my @Tests = (
             ParentID => $CategoryID2,
             UserID   => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },
@@ -252,7 +252,7 @@ my @Tests = (
             ParentID => $CategoryID11,
             UserID   => $UserID,
         },
-        Success => 1,
+        Success            => 1,
         NotExpectedResults =>
             [ $CategoryID1, $CategoryID2, $CategoryID3, $CategoryID11, $CategoryID12, $CategoryID121 ],
     },

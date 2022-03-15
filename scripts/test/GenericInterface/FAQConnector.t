@@ -554,7 +554,7 @@ my @Tests = (
         ExpectedReturnRemoteData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQGet.NotValidFAQID',
+                    ErrorCode    => 'PublicFAQGet.NotValidFAQID',
                     ErrorMessage =>
                         'PublicFAQGet: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQGet::Run()'
                 }
@@ -565,7 +565,7 @@ my @Tests = (
         ExpectedReturnLocalData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQGet.NotValidFAQID',
+                    ErrorCode    => 'PublicFAQGet.NotValidFAQID',
                     ErrorMessage =>
                         'PublicFAQGet: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQGet::Run()'
                 }
@@ -614,7 +614,7 @@ my @Tests = (
         ExpectedReturnRemoteData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }
@@ -624,7 +624,7 @@ my @Tests = (
         ExpectedReturnLocalData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }
@@ -642,7 +642,7 @@ my @Tests = (
         ExpectedReturnRemoteData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }
@@ -652,7 +652,7 @@ my @Tests = (
         ExpectedReturnLocalData => {
             Data => {
                 Error => {
-                    ErrorCode => 'PublicFAQSearch.NotFAQData',
+                    ErrorCode    => 'PublicFAQSearch.NotFAQData',
                     ErrorMessage =>
                         'PublicFAQSearch: Could not get FAQ data in Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch::Run()'
                 }
