@@ -530,7 +530,6 @@ sub _MaskNew {
 
     # Show attachments.
     ATTACHMENT:
-    my @AttachmentList;
     for my $Attachment ( @{ $Param{Attachments} } ) {
 
         # Do not show inline images as attachments (they have a ContentID).
