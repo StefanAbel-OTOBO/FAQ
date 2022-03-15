@@ -117,6 +117,7 @@ sub RelatedCustomerArticleList {
 }
 
 # FAQ Service
+
 =head2 RelatedCustomerServiceArticleList()
 
 Get the service related faq article list for the given subject and body.
@@ -174,6 +175,7 @@ sub RelatedCustomerServiceArticleList {
             ItemID => $FAQArticleID,
             UserID => $Param{UserID},
         );
+
         # $FAQArticleData{Votes}
         $LookupRelatedFAQArticles{$FAQArticleID} = {
             %FAQArticleData,

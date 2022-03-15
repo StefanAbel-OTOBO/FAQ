@@ -17,7 +17,7 @@
 
 <div id="oooContent">
 
-    <div id="oooHeader">            
+    <div id="oooHeader">
         <div>
             <h1>[% Translate("FAQ Explorer") | html %]</h1>
             <div class="BreadCrumb">
@@ -59,7 +59,7 @@
             <h2 title="[% Data.Title | html %]">
                 [% Data.Title | html %]
             </h2>
-        
+
             <ul id="Messages">
 [% RenderBlockStart("AttachmentHeader") %]
                 <li class="Public Visible">

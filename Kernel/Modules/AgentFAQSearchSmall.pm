@@ -1015,12 +1015,12 @@ sub _MaskForm {
             # Get field HTML.
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} . $Preference->{Type} }
                 = $DynamicFieldBackendObject->SearchFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-                Profile            => \%Param,
-                DefaultValue =>
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Profile            => \%Param,
+                    DefaultValue       =>
                     $Self->{Config}->{Defaults}->{DynamicField}->{ $DynamicFieldConfig->{Name} },
-                LayoutObject => $LayoutObject,
-                Type         => $Preference->{Type},
+                    LayoutObject => $LayoutObject,
+                    Type         => $Preference->{Type},
                 );
         }
     }

@@ -49,10 +49,10 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get FAQs by service only, if FAQ::Customer::RelatedArticlesOnServiceOnly
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $FAQServicesEnabled = $ConfigObject->Get('FAQ::Service');
     my $ShowOnServiceOnly  = $ConfigObject->Get('FAQ::Customer::RelatedArticlesOnServiceOnly');
-    my %ServiceID = $FAQServicesEnabled ? ( ServiceID => $ServiceID ) : ();
+    my %ServiceID          = $FAQServicesEnabled ? ( ServiceID => $ServiceID ) : ();
 
     if ( $FAQServicesEnabled && !$ServiceID ) {
         $RelatedFAQArticleFoundNothing = 1;
@@ -80,6 +80,7 @@ sub Run {
         }
     }
     elsif ( $Subject || $Body ) {
+
         # Get the language from the user and add the default languages from the config.
         my $RelatedArticleLanguages = $Config->{'DefaultLanguages'} || [];
 

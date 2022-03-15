@@ -79,7 +79,7 @@ sub Run {
 
     # get config data
     my $StartHit        = int( $ParamObject->GetParam( Param => 'StartHit' ) || 1 );
-    my $SearchLimit     = $Config->{SearchLimit} || 200;
+    my $SearchLimit     = $Config->{SearchLimit}     || 200;
     my $SearchPageShown = $Config->{SearchPageShown} || 40;
     my $SortBy          = $ParamObject->GetParam( Param => 'SortBy' )
         || $Config->{'SortBy::Default'}
@@ -1182,7 +1182,7 @@ sub Run {
                         $Attribute      = $Mapping->{ $GetParam{ItemCreateTimePointStart} };
                         $AttributeValue = $GetParam{ItemCreateTimePoint} . ' '
                             . $LayoutObject->{LanguageObject}->Translate(
-                            $GetParam{ItemCreateTimePointFormat} . '(s)'
+                                $GetParam{ItemCreateTimePointFormat} . '(s)'
                             );
                     }
                 }
@@ -1219,7 +1219,7 @@ sub Run {
                 Name => 'SearchTerms',
                 Data => {
                     Attribute => $DynamicFieldConfig->{Label},
-                    Value =>
+                    Value     =>
                         $DynamicFieldSearchDisplay{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
                 },
             );
@@ -1232,7 +1232,7 @@ sub Run {
             PageShown => $SearchPageShown,
             AllHits   => $Counter,
             Action    => "Action=PublicFAQSearch;Subaction=Search",
-            Link =>
+            Link      =>
                 "$Self->{Profile}SortBy=$SortBy;Order=$OrderBy;",
             IDPrefix => "PublicFAQSearch",
         );
@@ -1323,13 +1323,13 @@ sub Run {
                 # get field HTML
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} . $Preference->{Type} }
                     = $DynamicFieldBackendObject->SearchFieldRender(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-                    Profile            => \%GetParam,
-                    DefaultValue =>
+                        DynamicFieldConfig => $DynamicFieldConfig,
+                        Profile            => \%GetParam,
+                        DefaultValue       =>
                         $Config->{Defaults}->{DynamicField}->{ $DynamicFieldConfig->{Name} },
-                    LayoutObject           => $LayoutObject,
-                    ConfirmationCheckboxes => 1,
-                    Type                   => $Preference->{Type},
+                        LayoutObject           => $LayoutObject,
+                        ConfirmationCheckboxes => 1,
+                        Type                   => $Preference->{Type},
                     );
             }
         }

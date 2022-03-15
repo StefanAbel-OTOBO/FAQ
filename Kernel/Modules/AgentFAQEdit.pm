@@ -77,7 +77,8 @@ sub Run {
     }
 
     my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
-# FAQ Service # TODO
+
+    # FAQ Service # TODO
     my %FAQData = $FAQObject->FAQGet(
         ItemID        => $GetParam{ItemID},
         ItemFields    => 1,
@@ -227,12 +228,12 @@ sub Run {
             # Get field HTML.
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                 $DynamicFieldBackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-                Value              => $Value,
-                Mandatory =>
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Value              => $Value,
+                    Mandatory          =>
                     $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                LayoutObject => $LayoutObject,
-                ParamObject  => $ParamObject,
+                    LayoutObject => $LayoutObject,
+                    ParamObject  => $ParamObject,
                 );
         }
 
@@ -380,7 +381,7 @@ sub Run {
             my $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 ParamObject        => $ParamObject,
-                Mandatory =>
+                Mandatory          =>
                     $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
             );
 
@@ -402,13 +403,13 @@ sub Run {
             # Get field HTML.
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                 $DynamicFieldBackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-                Mandatory =>
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Mandatory          =>
                     $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                ServerError  => $ValidationResult->{ServerError}  || '',
-                ErrorMessage => $ValidationResult->{ErrorMessage} || '',
-                LayoutObject => $LayoutObject,
-                ParamObject  => $ParamObject,
+                    ServerError  => $ValidationResult->{ServerError}  || '',
+                    ErrorMessage => $ValidationResult->{ErrorMessage} || '',
+                    LayoutObject => $LayoutObject,
+                    ParamObject  => $ParamObject,
                 );
         }
 
@@ -440,7 +441,7 @@ sub Run {
                 if ( !$ApprovalQueueID ) {
                     $Output .= $LayoutObject->Notify(
                         Priority => 'Error',
-                        Info =>
+                        Info     =>
                             "FAQ Approval is enabled but queue '$ApprovalQueue' does not exists",
                         Link => $LayoutObject->{Baselink}
                             . 'Action=AdminSystemConfiguration;Subaction=ViewCustomGroup;Names=FAQ::ApprovalQueue',
@@ -496,8 +497,8 @@ sub Run {
             if ( $ParamObject->GetArray( Param => 'ServiceID' ) ) {
                 @ServiceIDs = $ParamObject->GetArray( Param => 'ServiceID' );
             }
-            $GetParam{ServiceID} 	= \@ServiceIDs;
-            $GetParam{ServiceList} 	= \%ServiceList;
+            $GetParam{ServiceID}   = \@ServiceIDs;
+            $GetParam{ServiceList} = \%ServiceList;
         }
 
         # Update the new FAQ item.
@@ -583,7 +584,7 @@ sub Run {
         ATTACHMENT:
         for my $Attachment (@ExistingAttachments) {
 
-          # The key is the filename + filesizeraw + content type (no content id, as existing attachments don't have it).
+            # The key is the filename + filesizeraw + content type (no content id, as existing attachments don't have it).
             my $Key = $Attachment->{Filename}
                 . $Attachment->{FilesizeRaw}
                 . $Attachment->{ContentType};
@@ -865,6 +866,7 @@ sub _MaskNew {
 
     # show services
     if ( $ConfigObject->Get('FAQ::Service') ) {
+
         # get all services
         my %ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceList(
             KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren') // 0,

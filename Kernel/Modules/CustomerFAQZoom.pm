@@ -238,7 +238,7 @@ sub Run {
     );
 
     # AddJSData for ES
-    my $ESActive = $ConfigObject->Get( 'Elasticsearch::Active' );
+    my $ESActive = $ConfigObject->Get('Elasticsearch::Active');
 
     $LayoutObject->AddJSData(
         Key   => 'ESActive',

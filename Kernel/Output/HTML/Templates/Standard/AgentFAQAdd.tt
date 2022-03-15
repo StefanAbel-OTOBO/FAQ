@@ -62,7 +62,7 @@
                         [% Data.StateOption %]
                     </div>
                     <div class="Clear"></div>
-                    
+
 [% RenderBlockStart("Service") %]
                     [% IF Data.ServiceOption %]
                     <label for="ServiceID">[% Translate("Service") | html %]:</label>

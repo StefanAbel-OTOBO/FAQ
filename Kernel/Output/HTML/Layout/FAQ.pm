@@ -367,9 +367,9 @@ sub FAQListShow {
         Limit     => $Limit,
         StartHit  => $StartHit,
         PageShown => $PageShown,
-        AllHits   => $Param{Total} || 0,
+        AllHits   => $Param{Total}    || 0,
         Frontend  => $Param{Frontend} || 'Agent',
-        Nav       => $Param{Nav} || '',
+        Nav       => $Param{Nav}      || '',
         TitleSize => $Param{FAQTitleSize},
     );
 
@@ -1137,7 +1137,7 @@ sub FAQShowQuickSearch {
             Name => 'QuickSearch',
             Data => {
                 Action         => $Action,
-                Nav            => $Param{Nav} || '',
+                Nav            => $Param{Nav}            || '',
                 SearchBackLink => $Param{SearchBackLink} || '',
             },
         );

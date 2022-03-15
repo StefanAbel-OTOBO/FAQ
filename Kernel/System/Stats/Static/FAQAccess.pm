@@ -63,7 +63,7 @@ sub Param {
     my $Y = sprintf( "%02d", $DateTimeSettings->{Year} );
 
     # Create possible time selections.
-    my %Year = map { $_ => $_ } ( $Y - 10 .. $Y + 1 );
+    my %Year  = map { $_ => $_ } ( $Y - 10 .. $Y + 1 );
     my %Month = map { sprintf( "%02d", $_ ) => sprintf( "%02d", $_ ) } ( 1 .. 12 );
     my %Day   = map { sprintf( "%02d", $_ ) => sprintf( "%02d", $_ ) } ( 1 .. 31 );
 
@@ -222,7 +222,7 @@ sub Run {
         my $VoteResult = sprintf(
             "%0."
                 . $ConfigObject->Get(
-                "FAQ::Explorer::ItemList::VotingResultDecimalPlaces"
+                    "FAQ::Explorer::ItemList::VotingResultDecimalPlaces"
                 )
                 . "f",
             $VoteData->{Result}

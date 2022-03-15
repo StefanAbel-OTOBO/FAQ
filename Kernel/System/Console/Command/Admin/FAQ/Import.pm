@@ -134,7 +134,7 @@ sub Run {
         $LineCounter++;
 
         my (
-            $Title, $CategoryString, $Language, $StateType,
+            $Title,  $CategoryString, $Language, $StateType,
             $Field1, $Field2, $Field3, $Field4, $Field5, $Field6, $Keywords
         ) = @{$RowRef};
 
