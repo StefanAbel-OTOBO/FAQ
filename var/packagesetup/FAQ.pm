@@ -203,7 +203,7 @@ This function is only executed if the installed module version is smaller than 4
 
 =cut
 
-sub CodeUpgradeFromLowerThan_4_0_1 {    ## no critic
+sub CodeUpgradeFromLowerThan_4_0_1 {    ## no critic qw(OTOBO::RequireCamelCase)
     my ( $Self, %Param ) = @_;
 
     # Migrate the DTL Content in the SysConfig.
@@ -220,7 +220,7 @@ This function is only executed if the installed module version is smaller than 4
 
 =cut
 
-sub CodeUpgradeFromLowerThan_4_0_91 {    ## no critic
+sub CodeUpgradeFromLowerThan_4_0_91 {    ## no critic qw(OTOBO::RequireCamelCase)
     my ( $Self, %Param ) = @_;
 
     # Change configurations to match the new module location.
@@ -240,7 +240,7 @@ This function is only executed if the installed module version is smaller than 5
 
 =cut
 
-sub CodeUpgradeFromLowerThan_5_0_92 {    ## no critic
+sub CodeUpgradeFromLowerThan_5_0_92 {    ## no critic qw(OTOBO::RequireCamelCase)
     my ( $Self, %Param ) = @_;
 
     # Recover the old permissions

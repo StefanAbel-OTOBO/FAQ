@@ -172,7 +172,7 @@ for my $Test (@Tests) {
 
     # Check if it was restored to the old config.
     my $OldConfig = $Test->{OldConfig};
-    local *var::packagesetup::FAQ::_GetOTOBO5ConfigBackup = sub {    ## no critic
+    local *var::packagesetup::FAQ::_GetOTOBO5ConfigBackup = sub {
         return $OldConfig;
     };
 
