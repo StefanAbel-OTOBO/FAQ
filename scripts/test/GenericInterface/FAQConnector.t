@@ -14,19 +14,27 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
+use v5.24;
 use strict;
 use warnings;
 use utf8;
-use vars (qw($Self));
 
+# core modules
 use Socket;
-use YAML;
 use MIME::Base64;
+
+# CPAN modules
+use YAML;
+
+# OTOBO modules
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Self and $Kernel::OM
 use Kernel::GenericInterface::Debugger;
 use Kernel::GenericInterface::Operation::FAQ::LanguageList;
 use Kernel::GenericInterface::Operation::FAQ::PublicCategoryList;
 use Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch;
 use Kernel::GenericInterface::Operation::FAQ::PublicFAQGet;
+
+our $Self;
 
 # get helper object
 my $HelperObject = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
@@ -917,4 +925,4 @@ $Self->True(
     "CategoryDelete() - Category: $CategoryIDOne",
 );
 
-1;
+$Self->DoneTesting();

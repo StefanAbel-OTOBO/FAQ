@@ -14,10 +14,17 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
+use v5.24;
 use strict;
 use warnings;
 
-use vars qw($Self);
+# core modules
+
+# CPAN modules
+use Test2::V0;
+
+# OTOBO modules
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Kernel::OM
 
 $Kernel::OM->ObjectParamAdd(
     'Kernel::System::UnitTest::Helper' => {
@@ -166,10 +173,7 @@ for my $FAQItem (@FAQItems) {
         %{$FAQItem},
     );
 
-    $Self->True(
-        $FAQItemID,
-        "FAQAdd() successful for test - FAQItemID $FAQItemID",
-    );
+    ok( $FAQItemID, "FAQAdd() successful for test - FAQItemID $FAQItemID" );
 
     push @FAQItemIDs, $FAQItemID;
 }
@@ -423,41 +427,30 @@ for my $Test (@Tests) {
     # check FAQKeywordArticleList attribute
     if ( !$Test->{FAQKeywordArticleList} || ref $Test->{FAQKeywordArticleList} ne 'HASH' ) {
 
-        $Self->True(
-            0,
-            "Test $TestCount: No FAQKeywordArticleList found for this test.",
-        );
+        fail("Test $TestCount: No FAQKeywordArticleList found for this test.");
 
         next TEST;
     }
 
-    # print test case description
-    if ( $Test->{Description} ) {
-        $Self->True(
-            1,
-            "Test $TestCount: $Test->{Description}",
+    subtest "Test $TestCount: $Test->{Description}" => sub {
+
+        my %FAQKeywordArticleList = $FAQObject->FAQKeywordArticleList(
+            $Test->{FAQKeywordArticleList}->%*,
         );
-    }
 
-    my %FAQKeywordArticleList = $FAQObject->FAQKeywordArticleList(
-        %{ $Test->{FAQKeywordArticleList} },
-    );
+        if ( $Test->{Fails} ) {
+            ok( !%FAQKeywordArticleList, "Test $TestCount: FAQKeywordArticleList() - should fail." );
+        }
+        else {
 
-    if ( $Test->{Fails} ) {
-        $Self->False(
-            %FAQKeywordArticleList ? 1 : 0,
-            "Test $TestCount: FAQKeywordArticleList() - should fail.",
-        );
-    }
-    else {
+            for my $Keyword ( sort keys %{ $Test->{ReferenceData} } ) {
 
-        for my $Keyword ( sort keys %{ $Test->{ReferenceData} } ) {
-
-            $Self->IsDeeply(
-                $FAQKeywordArticleList{$Keyword} || [],
-                $Test->{ReferenceData}->{$Keyword},
-                "Test $TestCount: FAQKeywordArticleList() - $Keyword - test the result",
-            );
+                is(
+                    $FAQKeywordArticleList{$Keyword} || [],
+                    $Test->{ReferenceData}->{$Keyword},
+                    "Test $TestCount: FAQKeywordArticleList() - $Keyword - test the result",
+                );
+            }
         }
     }
 }
@@ -496,14 +489,11 @@ my $LastFAQKeywordArticleListCache = $Kernel::OM->Get('Kernel::System::Cache')->
     Key  => $CacheKey,
 );
 
-$Self->True(
-    1,
-    "Test $TestCount: Test the cache for last function call",
-);
+diag("Test $TestCount: Test the cache for last function call");
 
 for my $Keyword ( sort keys %{ $Tests[-1]->{ReferenceData} } ) {
 
-    $Self->IsDeeply(
+    is(
         $LastFAQKeywordArticleListCache->{$Keyword} || [],
         $Tests[-1]->{ReferenceData}->{$Keyword},
         "Test $TestCount: Cache - FAQKeywordArticleList() - $Keyword - test the result",
@@ -795,10 +785,7 @@ for my $Test (@Tests) {
         )
     {
 
-        $Self->True(
-            0,
-            "Test $TestCount: No RelatedAgentArticleList or RelatedCustomerArticleList found for this test.",
-        );
+        fail("Test $TestCount: No RelatedAgentArticleList or RelatedCustomerArticleList found for this test.");
 
         next TEST;
     }
@@ -812,49 +799,37 @@ for my $Test (@Tests) {
         $RelatedArticleFunction = 'RelatedAgentArticleList';
     }
 
-    # print test case description
-    if ( $Test->{Description} ) {
-        $Self->True(
-            1,
-            "Test $TestCount: $Test->{Description}",
-        );
-    }
+    subtest "Test $TestCount: $Test->{Description}" => sub {
+        my @RelatedArticleList;
 
-    my @RelatedArticleList;
+        if ( $Test->{RelatedCustomerArticleList} ) {
+            @RelatedArticleList = $FAQObject->$RelatedArticleFunction(
+                %{ $Test->{RelatedCustomerArticleList} },
+            );
+        }
+        else {
+            @RelatedArticleList = $FAQObject->$RelatedArticleFunction(
+                %{ $Test->{RelatedAgentArticleList} },
+            );
+        }
 
-    if ( $Test->{RelatedCustomerArticleList} ) {
+        if ( $Test->{Fails} ) {
+            ok( !@RelatedArticleList, "Test $TestCount: $RelatedArticleFunction() - should fail." );
+        }
+        else {
 
-        @RelatedArticleList = $FAQObject->$RelatedArticleFunction(
-            %{ $Test->{RelatedCustomerArticleList} },
-        );
-    }
-    else {
-        @RelatedArticleList = $FAQObject->$RelatedArticleFunction(
-            %{ $Test->{RelatedAgentArticleList} },
-        );
-    }
+            my @RelatedFAQArticleIDs = map { $_->{ItemID} } @RelatedArticleList;
 
-    if ( $Test->{Fails} ) {
-        $Self->False(
-            @RelatedArticleList ? 1 : 0,
-            "Test $TestCount: $RelatedArticleFunction() - should fail.",
-        );
-    }
-    else {
-
-        my @RelatedFAQArticleIDs = map { $_->{ItemID} } @RelatedArticleList;
-
-        $Self->IsDeeply(
-            \@RelatedFAQArticleIDs,
-            $Test->{ReferenceData},
-            "Test $TestCount: $RelatedArticleFunction() - test the result",
-        );
+            is(
+                \@RelatedFAQArticleIDs,
+                $Test->{ReferenceData},
+                "Test $TestCount: $RelatedArticleFunction() - test the result",
+            );
+        }
     }
 }
 continue {
     $TestCount++;
 }
 
-# cleanup is done by restore database
-
-1;
+done_testing();

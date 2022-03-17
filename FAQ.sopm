@@ -435,58 +435,58 @@
     <CodeInstall Type="post"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeInstall();
+        $Kernel::OM->Get($CodeModule)->CodeInstall();
     ]]></CodeInstall>
     <CodeUpgrade Type="post"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUpgrade();
+        $Kernel::OM->Get($CodeModule)->CodeUpgrade();
     ]]></CodeUpgrade>
     <CodeUpgrade Type="post" Version="1.5.3"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUpgradeSpecial();
+        $Kernel::OM->Get($CodeModule)->CodeUpgradeSpecial();
     ]]></CodeUpgrade>
     <CodeUpgrade Type="post" Version="4.0.1"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUpgradeFromLowerThan_4_0_1();
+        $Kernel::OM->Get($CodeModule)->CodeUpgradeFromLowerThan_4_0_1();
     ]]></CodeUpgrade>
     <CodeUpgrade Type="post" Version="4.0.91"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUpgradeFromLowerThan_4_0_91();
+        $Kernel::OM->Get($CodeModule)->CodeUpgradeFromLowerThan_4_0_91();
     ]]></CodeUpgrade>
     <CodeUpgrade Type="post" Version="5.0.92"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUpgradeFromLowerThan_5_0_92();
+        $Kernel::OM->Get($CodeModule)->CodeUpgradeFromLowerThan_5_0_92();
     ]]></CodeUpgrade>
     <CodeUninstall Type="pre"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUninstall();
+        $Kernel::OM->Get($CodeModule)->CodeUninstall();
     ]]></CodeUninstall>
     <CodeReinstall Type="post"><![CDATA[
 
         # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
 
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeReinstall();
+        $Kernel::OM->Get($CodeModule)->CodeReinstall();
     ]]></CodeReinstall>
     <DatabaseInstall Type="post">
         <TableCreate Name="faq_language">

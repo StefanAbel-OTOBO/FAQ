@@ -14,11 +14,19 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
+use v5.24;
 use strict;
 use warnings;
 use utf8;
 
-use vars (qw($Self));
+# core modules
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Self and $Kernel::OM
+
+our $Self;
 
 # get helper object
 $Kernel::OM->ObjectParamAdd(
@@ -82,6 +90,4 @@ for my $Test (@Tests) {
     );
 }
 
-# cleanup is done by RestoreDatabase.
-
-1;
+$Self->DoneTesting();
