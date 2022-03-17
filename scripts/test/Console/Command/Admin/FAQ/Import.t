@@ -14,11 +14,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
+use v5.24;
 use strict;
 use warnings;
 use utf8;
 
-use vars (qw($Self));
+# core modules
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Self and $Kernel::OM
+use Kernel::System::UnitTest::Selenium;
+
+our $Self;
 
 # get needed objects
 $Kernel::OM->ObjectParamAdd(
@@ -51,4 +60,4 @@ $Self->Is(
 
 # cleanup is done by restore database
 
-1;
+$Self->DoneTesting();

@@ -14,11 +14,19 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
+use v5.24;
 use strict;
 use warnings;
 use utf8;
 
-use vars (qw($Self));
+# core modules
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Self and $Kernel::OM
+
+our $Self;
 
 my $CommandObject = $Kernel::OM->Get('Kernel::System::Console::Command::Maint::FAQ::ContentTypeSet');
 
@@ -36,4 +44,4 @@ $Self->Is(
     "Kernel::System::Console::Command::Maint::FAQ::ContentTypeSet exit code",
 );
 
-1;
+$Self->DoneTesting();

@@ -14,12 +14,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
+use v5.24;
 use strict;
 use warnings;
 
+# core modules
 use List::Util qw();
-use vars qw($Self);
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Self and $Kernel::OM
 use var::packagesetup::FAQ;
+
+our $Self;
 
 my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
@@ -300,4 +308,4 @@ $Self->True(
     'Restored default configuration'
 );
 
-1;
+$Self->DoneTesting();
