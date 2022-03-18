@@ -21,11 +21,11 @@ use warnings;
 # core modules
 
 # CPAN modules
+use Test2::V0;
 
 # OTOBO modules
-use Kernel::System::UnitTest::RegisterDriver;    # Set up $Self and $Kernel::OM
-
-our $Self;
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Kernel::OM
+use Kernel::System::UnitTest::MockTime qw(:all);
 
 # get helper object
 $Kernel::OM->ObjectParamAdd(
@@ -72,7 +72,8 @@ my %FAQAddTemplate = (
 );
 
 # freeze time
-$Helper->FixedTimeSet();
+FixedTimeSet(); # t=0m
+FixedTimeAddSeconds(10*60);
 
 # get FAQ object
 my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
@@ -83,17 +84,12 @@ for my $Counter ( 1 .. 2 ) {
         UserID => $AddedUsers[ $Counter - 1 ],
     );
 
-    $Self->IsNot(
-        undef,
-        $ItemID,
-        "FAQAdd() ItemID:'$ItemID' for FAQSearch()",
-    );
-
+    ok( defined $ItemID, "FAQAdd() $Counter ItemID:'$ItemID' for FAQSearch()",);
     push @AddedFAQs, $ItemID;
 
     # add 1 minute to frozen time
-    $Helper->FixedTimeAddSeconds(60);
-}
+    FixedTimeAddSeconds(60);
+} # t=2m
 
 # add some votes
 my @VotesToAdd = (
@@ -142,15 +138,12 @@ my @VotesToAdd = (
 for my $Vote (@VotesToAdd) {
     my $Success = $FAQObject->VoteAdd( %{$Vote} );
 
-    $Self->True(
-        $Success,
-        "VoteAdd(): ItemID:'$Vote->{ItemID}' IP:'$Vote->{IP}' Rate:'$Vote->{Rate}' with true",
-    );
+    ok( $Success, "VoteAdd(): ItemID:'$Vote->{ItemID}' IP:'$Vote->{IP}' Rate:'$Vote->{Rate}' with true" );
 }
 
 # do vote search tests
 my %SearchConfigTemplate = (
-    Keyword          => "$RandomID",
+    Keyword          => $RandomID,
     States           => [ 'public', 'internal' ],
     OrderBy          => ['FAQID'],
     OrderByDirection => ['Up'],
@@ -158,7 +151,7 @@ my %SearchConfigTemplate = (
     UserID           => 1,
 
 );
-my @Tests = (
+my @VotesTests = (
 
     # votes tests
     {
@@ -490,18 +483,14 @@ my @Tests = (
 );
 
 # execute the tests
-for my $Test (@Tests) {
+for my $Test (@VotesTests) {
     my @ItemIDs = $FAQObject->FAQSearch( %{ $Test->{Config} } );
 
-    $Self->IsDeeply(
-        \@ItemIDs,
-        $Test->{ExpectedResults},
-        "$Test->{Name} FAQSearch()",
-    );
+    is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name} FAQSearch()" );
 }
 
 # other tests
-@Tests = (
+my @OtherTests = (
     {
         Name   => 'States Hash Correct IDs',
         Config => {
@@ -542,14 +531,10 @@ for my $Test (@Tests) {
 );
 
 # execute the tests
-for my $Test (@Tests) {
+for my $Test (@OtherTests) {
     my @ItemIDs = $FAQObject->FAQSearch( %{ $Test->{Config} } );
 
-    $Self->IsDeeply(
-        \@ItemIDs,
-        $Test->{ExpectedResults},
-        "$Test->{Name} FAQSearch()",
-    );
+    is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name} FAQSearch()" );
 }
 
 # time based tests
@@ -568,7 +553,7 @@ my %FAQUpdateTemplate = (
 );
 
 # add 1 minute to frozen time
-$Helper->FixedTimeAddSeconds(60);
+FixedTimeAddSeconds(60); # t=3m
 
 my $Success = $FAQObject->FAQUpdate(
     %FAQUpdateTemplate,
@@ -576,12 +561,9 @@ my $Success = $FAQObject->FAQUpdate(
     UserID => $AddedUsers[2],
 );
 
-$Self->True(
-    $Success,
-    "FAQUpdate() ItemID:'$AddedFAQs[0]' for FAQSearch()",
-);
+ok( $Success, "FAQUpdate() ItemID:'$AddedFAQs[0]' for FAQSearch()" );
 
-$Helper->FixedTimeAddSeconds(60);
+FixedTimeAddSeconds(60); # t=4m
 
 $Success = $FAQObject->FAQUpdate(
     %FAQUpdateTemplate,
@@ -589,13 +571,10 @@ $Success = $FAQObject->FAQUpdate(
     UserID => $AddedUsers[3],
 );
 
-$Self->True(
-    $Success,
-    "FAQUpdate() ItemID:'$AddedFAQs[1]' for FAQSearch()",
-);
+ok( $Success, "FAQUpdate() ItemID:'$AddedFAQs[1]' for FAQSearch()" );
 
 # add 2 minutes to frozen time
-$Helper->FixedTimeAddSeconds(120);
+FixedTimeAddSeconds(120); # t=6m
 
 my $DateTime = $Kernel::OM->Create('Kernel::System::DateTime');
 
@@ -611,7 +590,8 @@ my $DateMinus5Mins = $DateTime->ToString();
 $DateTime->Subtract( Seconds => 60 );
 my $DateMinus6Mins = $DateTime->ToString();
 
-@Tests = (
+# Two FAQs were added. One 6 minutes ago, the other 5 minutes ago
+my @TimeBasedTests = (
     {
         Name   => 'CreateTimeOlderMinutes 3 min',
         Config => {
@@ -728,19 +708,14 @@ my $DateMinus6Mins = $DateTime->ToString();
 );
 
 # execute the tests
-for my $Test (@Tests) {
-
+for my $Test (@TimeBasedTests) {
     my @ItemIDs = $FAQObject->FAQSearch( %{ $Test->{Config} } );
 
-    $Self->IsDeeply(
-        \@ItemIDs,
-        $Test->{ExpectedResults},
-        "$Test->{Name} FAQSearch()",
-    );
+    is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name} FAQSearch()" );
 }
 
 # created user tests
-@Tests = (
+my @CreatedUserTests = (
     {
         Name   => 'CreatedUserIDs 1',
         Config => {
@@ -786,7 +761,7 @@ for my $Test (@Tests) {
 );
 
 # last changed user tests
-@Tests = (
+my @LastChangedUserTests = (
     {
         Name   => 'LastChangedUserIDs 3',
         Config => {
@@ -829,15 +804,10 @@ for my $Test (@Tests) {
 );
 
 # execute the tests
-for my $Test (@Tests) {
-
+for my $Test (@LastChangedUserTests) {
     my @ItemIDs = $FAQObject->FAQSearch( %{ $Test->{Config} } );
 
-    $Self->IsDeeply(
-        \@ItemIDs,
-        $Test->{ExpectedResults},
-        "$Test->{Name} FAQSearch()",
-    );
+    is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name} FAQSearch()" );
 }
 
 # approval tests
@@ -853,7 +823,7 @@ return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
     ],
 );
 
-@Tests = (
+my @ApprovalTests = (
     {
         Name   => 'Approved 1',
         Config => {
@@ -877,22 +847,14 @@ return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
 );
 
 # execute the tests
-for my $Test (@Tests) {
-
+for my $Test (@ApprovalTests) {
     my @ItemIDs = $FAQObject->FAQSearch( %{ $Test->{Config} } );
 
-    $Self->IsDeeply(
-        \@ItemIDs,
-        $Test->{ExpectedResults},
-        "$Test->{Name} FAQSearch()",
-    );
+    is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name} FAQSearch()" );
 }
 
 # execute old tests
-$Self->True(
-    1,
-    "--Execute Former Tests--",
-);
+diag( "Execute Former Tests" );
 {
     my $ItemID1 = $FAQObject->FAQAdd(
         CategoryID  => 1,
@@ -906,13 +868,10 @@ $Self->True(
         UserID      => 1,
         ContentType => 'text/html',
     );
-    $Self->True(
-        $ItemID1,
-        "FAQAdd() - 1",
-    );
+    ok( $ItemID1, "FAQAdd() - 1" );
 
     # add 1 minute to frozen time
-    $Helper->FixedTimeAddSeconds(60);
+    FixedTimeAddSeconds(60); # t=7m
 
     my $ItemID2 = $FAQObject->FAQAdd(
         Title       => 'Title' . $RandomID,
@@ -925,13 +884,10 @@ $Self->True(
         UserID      => 1,
         ContentType => 'text/html',
     );
-    $Self->True(
-        $ItemID2,
-        "FAQAdd() - 2",
-    );
+    ok( $ItemID2, "FAQAdd() - 2");
 
     # add 1 minute to frozen time
-    $Helper->FixedTimeAddSeconds(60);
+    FixedTimeAddSeconds(60);# t=8m
 
     my %Keywords = (
         Keyword1 => "some1$RandomID",
@@ -950,13 +906,10 @@ $Self->True(
         UserID      => 1,
         ContentType => 'text/html',
     );
-    $Self->True(
-        $ItemID3,
-        "FAQAdd() - 3",
-    );
+    ok( $ItemID3, "FAQAdd() - 3");
 
     # add 1 minute to frozen time
-    $Helper->FixedTimeAddSeconds(60);
+    FixedTimeAddSeconds(60); # t=9m
 
     my $ItemID4 = $FAQObject->FAQAdd(
         Title      => 'Test FAQ-4',
@@ -969,13 +922,10 @@ $Self->True(
         ContentType => 'text/html',
     );
 
-    $Self->True(
-        $ItemID4,
-        "FAQAdd() - 4",
-    );
+    ok( $ItemID4, "FAQAdd() - 4");
 
     # add 1 minute to frozen time
-    $Helper->FixedTimeAddSeconds(60);
+    FixedTimeAddSeconds(60); # t=10m
 
     my $ItemID5 = $FAQObject->FAQAdd(
         Title      => 'Test FAQ-5',
@@ -988,15 +938,12 @@ $Self->True(
         ContentType => 'text/html',
     );
 
-    $Self->True(
-        $ItemID5,
-        "FAQAdd() - 4",
-    );
+    ok( $ItemID5, "FAQAdd() - 4");
 
     # restore time
-    $Helper->FixedTimeUnset();
+    FixedTimeUnset();
 
-    @Tests = (
+    my @Tests = (
         {
             Name   => 'Keywords',
             Config => {
@@ -1172,7 +1119,6 @@ $Self->True(
     );
 
     for my $Test (@Tests) {
-
         my @ItemIDs = $FAQObject->FAQSearch(
             Number           => '*',
             States           => [ 'public', 'internal' ],
@@ -1182,12 +1128,8 @@ $Self->True(
             %{ $Test->{Config} },
         );
 
-        $Self->IsDeeply(
-            \@ItemIDs,
-            $Test->{ExpectedResults},
-            "$Test->{Name}, FAQSearch()",
-        );
+        is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name}, FAQSearch()");
     }
 }
 
-$Self->DoneTesting();
+done_testing();
