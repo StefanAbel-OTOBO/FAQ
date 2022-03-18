@@ -763,6 +763,13 @@ my @CreatedUserTests = (
     },
 );
 
+# execute the tests
+for my $Test (@CreatedUserTests) {
+    my @ItemIDs = $FAQObject->FAQSearch( %{ $Test->{Config} } );
+
+    is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name} FAQSearch()" );
+}
+
 # last changed user tests
 my @LastChangedUserTests = (
     {
