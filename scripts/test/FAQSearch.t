@@ -28,11 +28,11 @@ use Kernel::System::UnitTest::RegisterDriver;    # Set up $Kernel::OM
 use Kernel::System::UnitTest::MockTime qw(:all);
 
 # get helper object
-$Kernel::OM->ObjectParamAdd(
-    'Kernel::System::UnitTest::Helper' => {
-        RestoreDatabase => 1,
-    },
-);
+#$Kernel::OM->ObjectParamAdd(
+#    'Kernel::System::UnitTest::Helper' => {
+#        RestoreDatabase => 1,
+#    },
+#);
 my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
 # set config options
@@ -65,7 +65,6 @@ my %FAQAddTemplate = (
     StateID     => 1,
     LanguageID  => 1,
     Keywords    => $RandomID,
-    Field1      => 'Problem...',
     Field2      => 'Solution...',
     UserID      => 1,
     ContentType => 'text/html',
@@ -77,10 +76,14 @@ FixedTimeSet();    # t=0m
 # get FAQ object
 my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
 
+# add two FAQs with creation time 60 s apart
+my @Field1;
 for my $Counter ( 1 .. 2 ) {
+    push @Field1, sprintf 'Field1 Counter: %d, time: %d', $Counter, time;
     my $ItemID = $FAQObject->FAQAdd(
         %FAQAddTemplate,
         UserID => $AddedUsers[ $Counter - 1 ],
+        Field1 => $Field1[-1],
     );
 
     ok( defined $ItemID, "FAQAdd() $Counter ItemID:'$ItemID' for FAQSearch()", );
@@ -545,7 +548,6 @@ my %FAQUpdateTemplate = (
     StateID     => 1,
     LanguageID  => 1,
     Keywords    => $RandomID,
-    Field1      => 'Problem...',
     Field2      => 'Solution...',
     UserID      => 1,
     ContentType => 'text/html',
@@ -557,6 +559,7 @@ FixedTimeAddSeconds(60);    # t=3m
 my $Success = $FAQObject->FAQUpdate(
     %FAQUpdateTemplate,
     ItemID => $AddedFAQs[0],
+    Field1 => "Updated $Field1[0]",
     UserID => $AddedUsers[2],
 );
 
@@ -567,6 +570,7 @@ FixedTimeAddSeconds(60);    # t=4m
 $Success = $FAQObject->FAQUpdate(
     %FAQUpdateTemplate,
     ItemID => $AddedFAQs[1],
+    Field1 => "Updated $Field1[1]",
     UserID => $AddedUsers[3],
 );
 
