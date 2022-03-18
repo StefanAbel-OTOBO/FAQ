@@ -72,8 +72,7 @@ my %FAQAddTemplate = (
 );
 
 # freeze time
-FixedTimeSet(); # t=0m
-FixedTimeAddSeconds(10*60);
+FixedTimeSet();    # t=0m
 
 # get FAQ object
 my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
@@ -84,12 +83,12 @@ for my $Counter ( 1 .. 2 ) {
         UserID => $AddedUsers[ $Counter - 1 ],
     );
 
-    ok( defined $ItemID, "FAQAdd() $Counter ItemID:'$ItemID' for FAQSearch()",);
+    ok( defined $ItemID, "FAQAdd() $Counter ItemID:'$ItemID' for FAQSearch()", );
     push @AddedFAQs, $ItemID;
 
     # add 1 minute to frozen time
     FixedTimeAddSeconds(60);
-} # t=2m
+}    # t=2m
 
 # add some votes
 my @VotesToAdd = (
@@ -553,7 +552,7 @@ my %FAQUpdateTemplate = (
 );
 
 # add 1 minute to frozen time
-FixedTimeAddSeconds(60); # t=3m
+FixedTimeAddSeconds(60);    # t=3m
 
 my $Success = $FAQObject->FAQUpdate(
     %FAQUpdateTemplate,
@@ -563,7 +562,7 @@ my $Success = $FAQObject->FAQUpdate(
 
 ok( $Success, "FAQUpdate() ItemID:'$AddedFAQs[0]' for FAQSearch()" );
 
-FixedTimeAddSeconds(60); # t=4m
+FixedTimeAddSeconds(60);    # t=4m
 
 $Success = $FAQObject->FAQUpdate(
     %FAQUpdateTemplate,
@@ -574,7 +573,7 @@ $Success = $FAQObject->FAQUpdate(
 ok( $Success, "FAQUpdate() ItemID:'$AddedFAQs[1]' for FAQSearch()" );
 
 # add 2 minutes to frozen time
-FixedTimeAddSeconds(120); # t=6m
+FixedTimeAddSeconds(120);    # t=6m
 
 my $DateTime = $Kernel::OM->Create('Kernel::System::DateTime');
 
@@ -854,7 +853,7 @@ for my $Test (@ApprovalTests) {
 }
 
 # execute old tests
-diag( "Execute Former Tests" );
+diag("Execute Former Tests");
 {
     my $ItemID1 = $FAQObject->FAQAdd(
         CategoryID  => 1,
@@ -871,7 +870,7 @@ diag( "Execute Former Tests" );
     ok( $ItemID1, "FAQAdd() - 1" );
 
     # add 1 minute to frozen time
-    FixedTimeAddSeconds(60); # t=7m
+    FixedTimeAddSeconds(60);    # t=7m
 
     my $ItemID2 = $FAQObject->FAQAdd(
         Title       => 'Title' . $RandomID,
@@ -884,10 +883,10 @@ diag( "Execute Former Tests" );
         UserID      => 1,
         ContentType => 'text/html',
     );
-    ok( $ItemID2, "FAQAdd() - 2");
+    ok( $ItemID2, "FAQAdd() - 2" );
 
     # add 1 minute to frozen time
-    FixedTimeAddSeconds(60);# t=8m
+    FixedTimeAddSeconds(60);    # t=8m
 
     my %Keywords = (
         Keyword1 => "some1$RandomID",
@@ -906,10 +905,10 @@ diag( "Execute Former Tests" );
         UserID      => 1,
         ContentType => 'text/html',
     );
-    ok( $ItemID3, "FAQAdd() - 3");
+    ok( $ItemID3, "FAQAdd() - 3" );
 
     # add 1 minute to frozen time
-    FixedTimeAddSeconds(60); # t=9m
+    FixedTimeAddSeconds(60);    # t=9m
 
     my $ItemID4 = $FAQObject->FAQAdd(
         Title      => 'Test FAQ-4',
@@ -922,10 +921,10 @@ diag( "Execute Former Tests" );
         ContentType => 'text/html',
     );
 
-    ok( $ItemID4, "FAQAdd() - 4");
+    ok( $ItemID4, "FAQAdd() - 4" );
 
     # add 1 minute to frozen time
-    FixedTimeAddSeconds(60); # t=10m
+    FixedTimeAddSeconds(60);    # t=10m
 
     my $ItemID5 = $FAQObject->FAQAdd(
         Title      => 'Test FAQ-5',
@@ -938,7 +937,7 @@ diag( "Execute Former Tests" );
         ContentType => 'text/html',
     );
 
-    ok( $ItemID5, "FAQAdd() - 4");
+    ok( $ItemID5, "FAQAdd() - 4" );
 
     # restore time
     FixedTimeUnset();
@@ -1128,7 +1127,7 @@ diag( "Execute Former Tests" );
             %{ $Test->{Config} },
         );
 
-        is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name}, FAQSearch()");
+        is( \@ItemIDs, $Test->{ExpectedResults}, "$Test->{Name}, FAQSearch()" );
     }
 }
 
