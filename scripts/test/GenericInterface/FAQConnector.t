@@ -25,16 +25,15 @@ use MIME::Base64;
 
 # CPAN modules
 use YAML;
+use Test2::V0;
 
 # OTOBO modules
-use Kernel::System::UnitTest::RegisterDriver;    # Set up $Self and $Kernel::OM
+use Kernel::System::UnitTest::RegisterDriver;    # Set up $Kernel::OM
 use Kernel::GenericInterface::Debugger;
 use Kernel::GenericInterface::Operation::FAQ::LanguageList;
 use Kernel::GenericInterface::Operation::FAQ::PublicCategoryList;
 use Kernel::GenericInterface::Operation::FAQ::PublicFAQSearch;
 use Kernel::GenericInterface::Operation::FAQ::PublicFAQGet;
-
-our $Self;
 
 # get helper object
 my $HelperObject = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
@@ -61,11 +60,7 @@ for my $Key ( sort keys %States ) {
     }
 }
 
-$Self->IsNot(
-    $PublicStateID,
-    undef,
-    "Search for public StateID",
-);
+ok( defined $PublicStateID, "Search for public StateID" );
 
 # category one
 my $CategoryIDOne = $FAQObject->CategoryAdd(
@@ -76,7 +71,7 @@ my $CategoryIDOne = $FAQObject->CategoryAdd(
     UserID   => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryIDOne,
     "CategoryAdd() - Category",
 );
@@ -90,7 +85,7 @@ my $CategoryIDTwo = $FAQObject->CategoryAdd(
     UserID   => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryIDTwo,
     "CategoryAdd() - Child Category",
 );
@@ -104,7 +99,7 @@ my $CategoryIDThree = $FAQObject->CategoryAdd(
     UserID   => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryIDThree,
     "CategoryAdd() - Child Category",
 );
@@ -118,7 +113,7 @@ my $CategoryIDFour = $FAQObject->CategoryAdd(
     UserID   => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryIDFour,
     "CategoryAdd() - Child Category",
 );
@@ -136,7 +131,7 @@ my $ItemIDOne = $FAQObject->FAQAdd(
     Approved    => 1,
 );
 
-$Self->True(
+ok(
     $ItemIDOne,
     "FAQAdd() - FAQ One",
 );
@@ -154,7 +149,7 @@ my $ItemIDTwo = $FAQObject->FAQAdd(
     Approved    => 1,
 );
 
-$Self->True(
+ok(
     $ItemIDTwo,
     "FAQAdd() - FAQ Two",
 );
@@ -172,7 +167,7 @@ my $ItemIDThree = $FAQObject->FAQAdd(
     Approved    => 1,
 );
 
-$Self->True(
+ok(
     $ItemIDThree,
     "FAQAdd() - FAQ Three",
 );
@@ -199,7 +194,7 @@ for my $File (qw(bin txt)) {
         Inline      => 0,                 # (0|1, default 0)
         UserID      => $UserID,
     );
-    $Self->True(
+    ok(
         $Attachment,
         "AttachmentAdd() - File " . $File,
     );
@@ -218,7 +213,7 @@ my $ItemIDFour = $FAQObject->FAQAdd(
     Approved    => 1,
 );
 
-$Self->True(
+ok(
     $ItemIDFour,
     "FAQAdd() - FAQ Four",
 );
@@ -321,9 +316,9 @@ for my $Key ( sort( keys %{$CategoryTree} ) ) {
 
 # create web-service object
 my $WebserviceObject = $Kernel::OM->Get('Kernel::System::GenericInterface::Webservice');
-$Self->Is(
-    'Kernel::System::GenericInterface::Webservice',
-    ref $WebserviceObject,
+isa_ok(
+    $WebserviceObject,
+    ['Kernel::System::GenericInterface::Webservice'],
     "Create webservice object",
 );
 
@@ -343,10 +338,7 @@ my $WebserviceID = $WebserviceObject->WebserviceAdd(
     ValidID => 1,
     UserID  => 1,
 );
-$Self->True(
-    $WebserviceID,
-    "Added Webservice",
-);
+ok( $WebserviceID, "Added Webservice" );
 
 # get remote host with some precautions for certain unit test systems
 my $Host = $HelperObject->GetTestHTTPHostname();
@@ -362,8 +354,8 @@ my $RemoteSystem =
     . '://'
     . $Host
     . '/'
-    . $ConfigObject->Get('ScriptAlias')
-    . '/nph-genericinterface.pl/WebserviceID/'
+    . $ConfigObject->Get('ScriptAlias')    # has trailing slash
+    . 'nph-genericinterface.pl/WebserviceID/'
     . $WebserviceID;
 
 my $WebserviceConfig = {
@@ -433,7 +425,7 @@ my $WebserviceUpdate = $WebserviceObject->WebserviceUpdate(
     ValidID => 1,
     UserID  => $UserID,
 );
-$Self->True(
+ok(
     $WebserviceUpdate,
     "Updated Webservice $WebserviceID - $WebserviceName",
 );
@@ -707,162 +699,150 @@ my $DebuggerObject = Kernel::GenericInterface::Debugger->new(
     WebserviceID      => $WebserviceID,
     CommunicationType => 'Provider',
 );
-$Self->Is(
-    ref $DebuggerObject,
-    'Kernel::GenericInterface::Debugger',
+isa_ok(
+    $DebuggerObject,
+    ['Kernel::GenericInterface::Debugger'],
     'DebuggerObject instantiate correctly',
 );
 
 for my $Test (@Tests) {
 
-    # create local object
-    my $LocalObject = "Kernel::GenericInterface::Operation::FAQ::$Test->{Operation}"->new(
-        DebuggerObject => $DebuggerObject,
-        WebserviceID   => $WebserviceID,
-    );
+    subtest $Test->{Name} => sub {
 
-    $Self->Is(
-        "Kernel::GenericInterface::Operation::FAQ::$Test->{Operation}",
-        ref $LocalObject,
-        "$Test->{Name} - Create local object",
-    );
+        # create local object
+        my $LocalObject = "Kernel::GenericInterface::Operation::FAQ::$Test->{Operation}"->new(
+            DebuggerObject => $DebuggerObject,
+            WebserviceID   => $WebserviceID,
+        );
 
-    # start requester with our web-service
-    my $LocalResult = $LocalObject->Run(
-        WebserviceID => $WebserviceID,
-        Invoker      => $Test->{Operation},
-        Data         => $Test->{RequestData},
-    );
+        isa_ok(
+            $LocalObject,
+            ["Kernel::GenericInterface::Operation::FAQ::$Test->{Operation}"],
+            "Create local object",
+        );
 
-    # check result
-    $Self->Is(
-        'HASH',
-        ref $LocalResult,
-        "$Test->{Name} - Local result structure is valid",
-    );
+        # start requester with our web-service
+        my $LocalResult = $LocalObject->Run(
+            WebserviceID => $WebserviceID,
+            Invoker      => $Test->{Operation},
+            Data         => $Test->{RequestData},
+        );
 
-    # workaround because results from direct call and
-    # from SOAP call are a little bit different
-    if ( $Test->{Operation} eq 'PublicFAQGet' ) {
+        # check result
+        ref_ok( $LocalResult, 'HASH', "Local result structure is valid" );
 
-        if ( ref $LocalResult->{Data}->{FAQItem} eq 'ARRAY' ) {
-            for my $FAQItem ( @{ $LocalResult->{Data}->{FAQItem} } ) {
-                for my $Key ( sort keys %{$FAQItem} ) {
-                    if ( !$FAQItem->{$Key} ) {
-                        $FAQItem->{$Key} = '';
+        # workaround because results from direct call and
+        # from SOAP call are a little bit different
+        if ( $Test->{Operation} eq 'PublicFAQGet' ) {
+
+            if ( ref $LocalResult->{Data}->{FAQItem} eq 'ARRAY' ) {
+                for my $FAQItem ( @{ $LocalResult->{Data}->{FAQItem} } ) {
+                    for my $Key ( sort keys %{$FAQItem} ) {
+                        if ( !$FAQItem->{$Key} ) {
+                            $FAQItem->{$Key} = '';
+                        }
+                    }
+                }
+            }
+
+        }
+
+        # remove ErrorMessage parameter from direct call
+        # result to be consistent with SOAP call result
+        if ( $LocalResult->{ErrorMessage} ) {
+            delete $LocalResult->{ErrorMessage};
+        }
+
+        if ( $Test->{ExpectedReturnLocalData} ) {
+            is(
+                $LocalResult,
+                $Test->{ExpectedReturnLocalData},
+                "Local result matched with remote result.",
+            );
+        }
+        else {
+            is(
+                $LocalResult,
+                $Test->{ExpectedReturnRemoteData},
+                "Local result matched with remote result.",
+            );
+        }
+
+        # remote call using the system as Requester and Provider
+
+        # create requester object
+        my $RequesterObject = $Kernel::OM->Get('Kernel::GenericInterface::Requester');
+        isa_ok(
+            $RequesterObject,
+            ['Kernel::GenericInterface::Requester'],
+            "Create requester object",
+        );
+
+        # start requester with our web-service
+        my $RequesterResult = $RequesterObject->Run(
+            WebserviceID => $WebserviceID,
+            Invoker      => $Test->{Operation},
+            Data         => $Test->{RequestData},
+        );
+
+        # check result
+        ref_ok( $RequesterResult, 'HASH', "Requester result structure is valid" );
+
+        # workaround because results from direct call and
+        # from SOAP call are a little bit different
+        if ( $Test->{Operation} eq 'PublicFAQGet' && $Test->{SuccessRequest} ) {
+
+            if ( ref $RequesterResult->{Data}->{FAQItem} eq 'HASH' ) {
+                for my $Key ( sort keys %{ $RequesterResult->{Data}->{FAQItem} } ) {
+                    if ( !$RequesterResult->{Data}->{FAQItem}->{$Key} ) {
+                        $RequesterResult->{Data}->{FAQItem}->{$Key} = '';
+                    }
+                }
+            }
+            elsif ( ref $RequesterResult->{Data}->{FAQItem} eq 'ARRAY' ) {
+                for my $FAQItem ( @{ $RequesterResult->{Data}->{FAQItem} } ) {
+                    for my $Key ( sort keys %{$FAQItem} ) {
+                        if ( !$FAQItem->{$Key} ) {
+                            $FAQItem->{$Key} = '';
+                        }
                     }
                 }
             }
         }
 
-    }
-
-    # remove ErrorMessage parameter from direct call
-    # result to be consistent with SOAP call result
-    if ( $LocalResult->{ErrorMessage} ) {
-        delete $LocalResult->{ErrorMessage};
-    }
-
-    if ( $Test->{ExpectedReturnLocalData} ) {
-        $Self->IsDeeply(
-            $LocalResult,
-            $Test->{ExpectedReturnLocalData},
-            "$Test->{Name} - Local result matched with remote result.",
+        is(
+            $RequesterResult->{Success},
+            $Test->{SuccessRequest},
+            "Requester - Success status",
         );
-    }
-    else {
-        $Self->IsDeeply(
-            $LocalResult,
+
+        is(
+            $RequesterResult,
             $Test->{ExpectedReturnRemoteData},
-            "$Test->{Name} - Local result matched with remote result.",
+            "Requester successful result (needs configured and running webserver)",
         );
-    }
-
-    # remote call using the system as Requester and Provider
-
-    # create requester object
-    my $RequesterObject = $Kernel::OM->Get('Kernel::GenericInterface::Requester');
-    $Self->Is(
-        'Kernel::GenericInterface::Requester',
-        ref $RequesterObject,
-        "$Test->{Name} - Create requester object",
-    );
-
-    # start requester with our web-service
-    my $RequesterResult = $RequesterObject->Run(
-        WebserviceID => $WebserviceID,
-        Invoker      => $Test->{Operation},
-        Data         => $Test->{RequestData},
-    );
-
-    # check result
-    $Self->Is(
-        'HASH',
-        ref $RequesterResult,
-        "$Test->{Name} - Requester result structure is valid",
-    );
-
-    # workaround because results from direct call and
-    # from SOAP call are a little bit different
-    if ( $Test->{Operation} eq 'PublicFAQGet' && $Test->{SuccessRequest} ) {
-
-        if ( ref $RequesterResult->{Data}->{FAQItem} eq 'HASH' ) {
-            for my $Key ( sort keys %{ $RequesterResult->{Data}->{FAQItem} } ) {
-                if ( !$RequesterResult->{Data}->{FAQItem}->{$Key} ) {
-                    $RequesterResult->{Data}->{FAQItem}->{$Key} = '';
-                }
-            }
-        }
-        elsif ( ref $RequesterResult->{Data}->{FAQItem} eq 'ARRAY' ) {
-            for my $FAQItem ( @{ $RequesterResult->{Data}->{FAQItem} } ) {
-                for my $Key ( sort keys %{$FAQItem} ) {
-                    if ( !$FAQItem->{$Key} ) {
-                        $FAQItem->{$Key} = '';
-                    }
-                }
-            }
-        }
-    }
-
-    $Self->Is(
-        $RequesterResult->{Success},
-        $Test->{SuccessRequest},
-        "$Test->{Name} - Requester - Success status",
-    );
-
-    $Self->IsDeeply(
-        $RequesterResult,
-        $Test->{ExpectedReturnRemoteData},
-        "$Test->{Name} - Requester successful result (needs configured and running webserver)",
-    );
-
-}    #end loop
+    };
+}
 
 # clean up web-service
 my $WebserviceDelete = $WebserviceObject->WebserviceDelete(
     ID     => $WebserviceID,
     UserID => $UserID,
 );
-$Self->True(
-    $WebserviceDelete,
-    "Deleted Webs-ervice $WebserviceID",
-);
+ok( $WebserviceDelete, "Deleted Webs-ervice $WebserviceID" );
 
 # clean up FAQ stuff
 my $FAQDelete = $FAQObject->FAQDelete(
     ItemID => $ItemIDOne,
     UserID => $UserID,
 );
-$Self->True(
-    $FAQDelete,
-    "FAQDelete() - ItemID: $ItemIDOne",
-);
+ok( $FAQDelete, "FAQDelete() - ItemID: $ItemIDOne" );
 
 $FAQDelete = $FAQObject->FAQDelete(
     ItemID => $ItemIDTwo,
     UserID => $UserID,
 );
-$Self->True(
+ok(
     $FAQDelete,
     "FAQDelete() - ItemID: $ItemIDTwo",
 );
@@ -871,7 +851,7 @@ $FAQDelete = $FAQObject->FAQDelete(
     ItemID => $ItemIDThree,
     UserID => $UserID,
 );
-$Self->True(
+ok(
     $FAQDelete,
     "FAQDelete() - ItemID: $ItemIDThree",
 );
@@ -880,7 +860,7 @@ $FAQDelete = $FAQObject->FAQDelete(
     ItemID => $ItemIDFour,
     UserID => $UserID,
 );
-$Self->True(
+ok(
     $FAQDelete,
     "FAQDelete() - ItemID: $ItemIDFour",
 );
@@ -890,7 +870,7 @@ my $CategoryDelete = $FAQObject->CategoryDelete(
     UserID     => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryDelete,
     "CategoryDelete() - Category: $CategoryIDFour",
 );
@@ -900,7 +880,7 @@ $CategoryDelete = $FAQObject->CategoryDelete(
     UserID     => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryDelete,
     "CategoryDelete() - Category: $CategoryIDThree",
 );
@@ -910,7 +890,7 @@ $CategoryDelete = $FAQObject->CategoryDelete(
     UserID     => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryDelete,
     "CategoryDelete() - Category: $CategoryIDTwo",
 );
@@ -920,9 +900,9 @@ $CategoryDelete = $FAQObject->CategoryDelete(
     UserID     => $UserID,
 );
 
-$Self->True(
+ok(
     $CategoryDelete,
     "CategoryDelete() - Category: $CategoryIDOne",
 );
 
-$Self->DoneTesting();
+done_testing();
