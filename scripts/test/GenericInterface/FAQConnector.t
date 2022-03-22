@@ -354,8 +354,8 @@ my $RemoteSystem =
     . '://'
     . $Host
     . '/'
-    . $ConfigObject->Get('ScriptAlias')
-    . '/nph-genericinterface.pl/WebserviceID/'
+    . $ConfigObject->Get('ScriptAlias')    # has trailing slash
+    . 'nph-genericinterface.pl/WebserviceID/'
     . $WebserviceID;
 
 my $WebserviceConfig = {
