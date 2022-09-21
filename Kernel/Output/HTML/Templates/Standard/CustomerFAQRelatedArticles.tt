@@ -15,7 +15,7 @@
 # --
 
 
-<div class="WidgetSimple">
+<div class="WidgetSimple" tabindex="-1">
 
     <div class="Header">
         <h3>[% Translate("This might be helpful") | html %]</h3>
