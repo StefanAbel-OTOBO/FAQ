@@ -272,7 +272,7 @@ Your OTOBO Notification Master
         </Value>
     </Setting>
     <Setting Name="FAQ::Item::Field1" Required="1" Valid="1">
-        <Description Translatable="1">Definition of FAQ item free text field.</Description>
+        <Description Translatable="1">Definition of FAQ item free text field. Possible values for 'Show' are e.g. an empty string, 'public' and 'internal'.</Description>
         <Navigation>Core::FAQ::Item</Navigation>
         <Value>
             <Hash>
@@ -283,7 +283,7 @@ Your OTOBO Notification Master
         </Value>
     </Setting>
     <Setting Name="FAQ::Item::Field2" Required="1" Valid="1">
-        <Description Translatable="1">Definition of FAQ item free text field.</Description>
+        <Description Translatable="1">Definition of FAQ item free text field. Possible values for 'Show' are e.g. an empty string, 'public' and 'internal'.</Description>
         <Navigation>Core::FAQ::Item</Navigation>
         <Value>
             <Hash>
@@ -294,7 +294,7 @@ Your OTOBO Notification Master
         </Value>
     </Setting>
     <Setting Name="FAQ::Item::Field3" Required="1" Valid="1">
-        <Description Translatable="1">Definition of FAQ item free text field.</Description>
+        <Description Translatable="1">Definition of FAQ item free text field. Possible values for 'Show' are e.g. an empty string, 'public' and 'internal'.</Description>
         <Navigation>Core::FAQ::Item</Navigation>
         <Value>
             <Hash>
@@ -305,7 +305,7 @@ Your OTOBO Notification Master
         </Value>
     </Setting>
     <Setting Name="FAQ::Item::Field4" Required="1" Valid="1">
-        <Description Translatable="1">Definition of FAQ item free text field.</Description>
+        <Description Translatable="1">Definition of FAQ item free text field. Possible values for 'Show' are e.g. an empty string, 'public' and 'internal'.</Description>
         <Navigation>Core::FAQ::Item</Navigation>
         <Value>
             <Hash>
@@ -316,7 +316,7 @@ Your OTOBO Notification Master
         </Value>
     </Setting>
     <Setting Name="FAQ::Item::Field5" Required="1" Valid="1">
-        <Description Translatable="1">Definition of FAQ item free text field.</Description>
+        <Description Translatable="1">Definition of FAQ item free text field. Possible values for 'Show' are e.g. an empty string, 'public' and 'internal'.</Description>
         <Navigation>Core::FAQ::Item</Navigation>
         <Value>
             <Hash>
@@ -327,7 +327,7 @@ Your OTOBO Notification Master
         </Value>
     </Setting>
     <Setting Name="FAQ::Item::Field6" Required="1" Valid="1">
-        <Description Translatable="1">Definition of FAQ item free text field.</Description>
+        <Description Translatable="1">Definition of FAQ item free text field. Possible values for 'Show' are e.g. an empty string, 'public' and 'internal'.</Description>
         <Navigation>Core::FAQ::Item</Navigation>
         <Value>
             <Hash>
